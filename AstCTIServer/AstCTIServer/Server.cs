@@ -1,4 +1,4 @@
-// Copyright (C) 2007 Bruno Salzano
+// Copyright (C) 2007-2008 Bruno Salzano
 // http://centralino-voip.brunosalzano.com
 //
 // This program is free software; you can redistribute it and/or modify
@@ -61,13 +61,14 @@ namespace AstCTIServer
         public static bool debug = false;
         public static MainServer AstCTI;
 
-        static bool IsMono()
+        public static bool IsMono()
         {
             Type t = Type.GetType("Mono.Runtime");
             return (t != null);
         }
 
-        static bool IsUnix() {
+        public static bool IsUnix()
+        {
             int p = (int)Environment.OSVersion.Platform;
             return ((p == 4) || (p == 128));
         }

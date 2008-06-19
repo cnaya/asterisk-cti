@@ -1,4 +1,4 @@
-// Copyright (C) 2007 Bruno Salzano
+// Copyright (C) 2007-2008 Bruno Salzano
 // http://centralino-voip.brunosalzano.com
 //
 // This program is free software; you can redistribute it and/or modify
@@ -127,12 +127,27 @@ namespace AstCTIServer
 			{
 				this.pClientSocket = new Socket(AddressFamily.InterNetwork,
 					SocketType.Stream, ProtocolType.Tcp);
+                System.Net.IPAddress remoteAddress = null;
+                if (this.pHost.Equals("127.0.0.1"))
+                {
+                    remoteAddress = IPAddress.Parse(this.pHost);
+                }
+                else
+                {
+                    Server.logger.WriteLine(LogType.DebugSocket, "SocketManager::Connect(): Try to resolve " + this.pHost);
 
-                IPHostEntry hostEntry = System.Net.Dns.GetHostEntry(this.pHost);
-				if (hostEntry.AddressList.Length < 1) return false;
-				
-				System.Net.IPAddress remoteAddress = hostEntry.AddressList[0];
-				System.Net.IPEndPoint remoteEndPoint = new IPEndPoint(remoteAddress, this.pPort);
+                    IPHostEntry hostEntry = System.Net.Dns.GetHostEntry(this.pHost);
+
+                    if (hostEntry.AddressList.Length < 1)
+                    {
+                        Server.logger.WriteLine(LogType.DebugSocket, "SocketManager::Connect(): GetHostEntry returned -1");
+                        return false;
+                    }
+                    remoteAddress = hostEntry.AddressList[0];
+
+                    Server.logger.WriteLine(LogType.DebugSocket, "SocketManager::Connect(): Resolved " + remoteAddress.ToString());
+                }
+                System.Net.IPEndPoint remoteEndPoint = new IPEndPoint(remoteAddress, this.pPort);
                 
                 Server.logger.WriteLine(LogType.Debug, "SocketManager::Connect(): Connecting Socket");
                 this.pClientSocket.Connect(remoteEndPoint);

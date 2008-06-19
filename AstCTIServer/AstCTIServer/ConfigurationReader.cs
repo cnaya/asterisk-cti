@@ -1,4 +1,4 @@
-// Copyright (C) 2007 Bruno Salzano
+// Copyright (C) 2007-2008 Bruno Salzano
 // http://centralino-voip.brunosalzano.com
 //
 // This program is free software; you can redistribute it and/or modify
@@ -60,6 +60,7 @@ namespace AstCTIServer
 		public string	MYSQL_USER		= "";
 		public string	MYSQL_PASS		= "";
 		public string	MYSQL_DBMS		= "";
+        public string   MYSQL_TIMEOUT   = "30";
 		public bool		LOG_ACTIVE		= false;
 		public string	LOG_DIRECTORY	= "";
 		public int		SOCKET_TIMEOUT	= 10;
@@ -99,7 +100,8 @@ namespace AstCTIServer
                 MYSQL_DBMS = database["MYSQL_DBMS"];
                 MYSQL_USER = database["MYSQL_USER"];
                 MYSQL_PASS = database["MYSQL_PASS"];
-                MYSQL_CONNSTR = getConnectionString(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DBMS);
+                MYSQL_TIMEOUT = database["MYSQL_TIMEOUT"];
+                MYSQL_CONNSTR = getConnectionString(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DBMS, MYSQL_TIMEOUT);
 
                 System.Collections.Specialized.NameValueCollection logging = (System.Collections.Specialized.NameValueCollection)System.Configuration.ConfigurationManager.GetSection("globalsettings/logging");
                 this.LOG_DIRECTORY = ParsePath(logging["DIRECTORY"]);
@@ -137,14 +139,34 @@ namespace AstCTIServer
         /// <param name="szPass">Database Password</param>
         /// <param name="szDBMS">Instance to open</param>
         /// <returns></returns>
-        private String getConnectionString(String szHost , String szUser ,String szPass , String szDBMS ) 
+        private String getConnectionString(String szHost , String szUser ,String szPass , String szDBMS,string timeOut ) 
 		{
+            
 			String connStr = "";
-			connStr = "Persist Security Info=False;" +
-                    "database=" + szDBMS + ";" + 
-                    "server=" + szHost + ";" + 
-                    "user id=" + szUser + ";" + 
-                    "Password=" + szPass;
+            if (Server.IsMono() | Server.IsUnix())
+            {
+                connStr = "Server=" + szHost + ";" +
+                        "Database=" + szDBMS + ";" +
+                        "User ID=" + szUser + ";" +
+                        "Password=" + szPass + ";" +
+                        "Pooling=false";
+                        
+            }
+            else
+            {
+                connStr = "Persist Security Info=False;" + 
+                           "Server=" + szHost + ";" +
+                        "Database=" + szDBMS + ";" +
+                        "User ID=" + szUser + ";" +
+                        "Password=" + szPass + ";" +
+                        "Connect Timeout=" + timeOut;
+                //connStr = "Persist Security Info=False;" +
+                //        "database=" + szDBMS + ";" +
+                //        "server=" + szHost + ";" +
+                //        "user id=" + szUser + ";" +
+                //        "Password=" + szPass + ";" +
+                //        "Connect Timeout=" + timeOut;
+            }
 			return connStr;
 		}
 
