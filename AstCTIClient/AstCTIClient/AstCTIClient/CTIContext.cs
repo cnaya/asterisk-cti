@@ -1,4 +1,4 @@
-// Copyright (C) 2007 Bruno Salzano
+// Copyright (C) 2007-2008 Bruno Salzano
 // http://centralino-voip.brunosalzano.com
 //
 // This program is free software; you can redistribute it and/or modify
@@ -51,6 +51,7 @@ namespace AstCTIClient
     [TypeConverter(typeof(CTIContextConverter))]
     public class CTIContext
     {
+        private bool use_internal_browser = false;
         private string context = "";
         private string application = "";
         private string parameters = "";
@@ -77,6 +78,12 @@ namespace AstCTIClient
         {
             get { return this.parameters; }
             set { this.parameters = value; }
+        }
+
+        public bool InternalBrowser
+        {
+            get { return this.use_internal_browser; }
+            set { this.use_internal_browser = value; }
         }
 
         public bool Enabled

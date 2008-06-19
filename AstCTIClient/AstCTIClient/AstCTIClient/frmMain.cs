@@ -1,4 +1,4 @@
-// Copyright (C) 2007 Bruno Salzano
+// Copyright (C) 2007-2008 Bruno Salzano
 // http://centralino-voip.brunosalzano.com
 //
 // This program is free software; you can redistribute it and/or modify
@@ -51,6 +51,9 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 using MySql.Data.Types;
 using System.Xml;
+using System.Resources;
+using System.Globalization;
+
 
 namespace AstCTIClient
 {
@@ -68,9 +71,15 @@ namespace AstCTIClient
         private ProtocolParser parser;
         private PROTOCOL_STATES protocolStatus;
         private System.Windows.Forms.Timer noOpTimer = null;
-        
-        SettingsManager.SettingsManager sm;
-        LocalAppSettings optset = null;
+
+        private string strResourcesPath = Application.StartupPath + Path.DirectorySeparatorChar + "lang";
+        private string strCulture = "en-US";
+        private static ResourceManager rm;
+
+        private bool bHideConfiguration = false;
+
+        private SettingsManager.SettingsManager sm;
+        private LocalAppSettings optset = null;
         //const and dll functions for moving form
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
@@ -87,7 +96,7 @@ namespace AstCTIClient
 
         delegate void GenericAction();
         delegate void GenericStringAction(string param);
-
+        
         public frmMain()
         {
             InitializeComponent();
@@ -102,13 +111,15 @@ namespace AstCTIClient
             this.txtUsername.LostFocus += new EventHandler(txtUsername_LostFocus);
             this.txtPhoneNumber.TextChanged += new EventHandler(txtPhoneNumber_TextChanged);
             this.cboOutboundContextes.SelectedIndexChanged += new EventHandler(cboOutboundContextes_SelectedIndexChanged);
+            this.Load += new EventHandler(frmMain_Load);
             this.socketmanager = null;
             this.parser = null;
             this.protocolStatus = PROTOCOL_STATES.STATUS_UNKNOWN;
             this.lblLineState.Text = "";
             sm = new SettingsManager.SettingsManager();
-
             
+
+            this.CheckRegistrySettings();
 
             try
             {
@@ -146,8 +157,54 @@ namespace AstCTIClient
                 MessageBox.Show(ex.ToString());
             }
 
+            
         }
 
+
+        void frmMain_Load(object sender, EventArgs e)
+        {
+            GlobalizeApp();            
+        }
+
+        /// <summary>
+        /// This function checks registry settings bHideConfiguration and bOnlyCti
+        /// to see if the software should hide configuration button and/or hide
+        /// outbound context and dial button
+        /// </summary>
+        void CheckRegistrySettings()
+        {
+            RegistryManager reg = new RegistryManager();
+            string retval = reg.Read("bHideConfiguration");
+            if (retval != null)
+            {
+                this.btnConfig.Visible = !retval.Equals("true");
+            }
+            else
+            {
+                reg.Write("bHideConfiguration", "false");
+
+            }
+
+            retval = reg.Read("bOnlyCti");
+            if (retval != null)
+            {
+                this.txtPhoneNumber.Visible = !retval.Equals("true"); ;
+                this.btnDial.Visible = !retval.Equals("true"); ;
+                this.cboOutboundContextes.Visible = !retval.Equals("true"); ;
+            }
+            else
+            {
+                reg.Write("bOnlyCti", "false");
+
+            }
+        }
+
+        /// <summary>
+        /// Detects error in socket and show a Message Box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="data"></param>
+        /// <param name="errorCode"></param>
         void socketmanager_SocketError(object sender, string data, int errorCode)
         {
             if (errorCode == 10061)
@@ -156,16 +213,34 @@ namespace AstCTIClient
             }
         }
 
+        /// <summary>
+        /// When the cboOutBoundContextes combo have been changed, checks
+        /// if we can enable dial actions
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void cboOutboundContextes_SelectedIndexChanged(object sender, EventArgs e)
         {
             this.btnDial.Enabled = this.CanEnableDialButton();
         }
 
+        /// <summary>
+        /// When the text in txtPhoneNumber have been changed, checks
+        /// if we can enable dial actions
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void txtPhoneNumber_TextChanged(object sender, EventArgs e)
         {
             this.btnDial.Enabled = this.CanEnableDialButton();
         }
 
+        /// <summary>
+        /// Sends NOOP to the server as some sort of keep-alive
+        /// to avoid the connection is closed from the remote server side
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void noOpTimer_Tick(object sender, EventArgs e)
         {
             if (this.socketmanager.IsConnected)
@@ -174,6 +249,11 @@ namespace AstCTIClient
             }
         }
 
+        /// <summary>
+        /// Save the username when the focus is lost
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void txtUsername_LostFocus(object sender, EventArgs e)
         {
             if (this.optset != null)
@@ -182,6 +262,11 @@ namespace AstCTIClient
             }
         }
 
+        /// <summary>
+        /// Save the password when the focus is lost
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void txtPassword_LostFocus(object sender, EventArgs e)
         {
             if (this.optset != null)
@@ -190,10 +275,15 @@ namespace AstCTIClient
             }
         }
 
+        /// <summary>
+        /// Check if mouse left button is down over the form: 
+        /// we can move the form.
+        /// The functions to move the form are called in MouseDown event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void frmMain_MouseDown(object sender, MouseEventArgs e)
         {
-            //call functions to move the form in your form's MouseDown event
-        
             if (e.Button == MouseButtons.Left)
             {
                 ReleaseCapture();
@@ -354,8 +444,9 @@ namespace AstCTIClient
 
         private void btnStartStop_Click(object sender, EventArgs e)
         {
-            if (btnStartStop.Text.Equals("Start"))
+            if (btnStartStop.Text.Equals(frmMain.RM.GetString("0008")))
             {
+                CheckRegistrySettings();
                 btnStartStop.Enabled = false;
                 if (!MySQLRegister())
                 {
@@ -382,25 +473,26 @@ namespace AstCTIClient
             {
                 #region Asterisk Events
                 string eventId = "";
+                string state = "";
                 AsteriskCall call = AsteriskCall.CallFromXml(data, out eventId);
                 if (call != null)
                 {
                     switch (eventId)
                     {
                         case "Newstate":
-                            string state = call.State;
+                            state = call.State;
                             if (state != null)
                             {
                                 switch (state)
                                 {
                                     case "Up":
-                                        state = "Off Hook";
+                                        state = frmMain.RM.GetString("0101"); // "Off Hook";
                                         break;
                                     case "Ringing":
-                                        state = "Ringing";
+                                        state = frmMain.RM.GetString("0102");  // "Ringing";
                                         break;
                                     case "Down":
-                                        state = "On Hook";
+                                        state = frmMain.RM.GetString("0103");  //"On Hook";
                                         break;
                                 }
                             }
@@ -433,11 +525,13 @@ namespace AstCTIClient
                                     }
                                 }
                             }
-                            Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)lblLineState, "Text", "Connected" });
+                            state = frmMain.RM.GetString("0104"); // "Connected"
+                            Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)lblLineState, "Text", state });
                             if (tostart != null) ExecCTIApplication(tostart,call);
                             break;
                         case "Hangup":
-                            Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)lblLineState, "Text", "Hang up" });
+                            state = frmMain.RM.GetString("0105"); // "Hangup"
+                            Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)lblLineState, "Text", state });
                             EnableCallActions(true);
                             break;
                     }
@@ -469,7 +563,7 @@ namespace AstCTIClient
                         {
                             this.socketmanager.SendData("QUIT");
                             this.socketmanager.Disconnect();
-                            MessageBox.Show("Invalid credential");
+                            MessageBox.Show(frmMain.RM.GetString("0014")); // "Invalid credentials"
                         }
                         break;
                     case 102:
@@ -479,7 +573,7 @@ namespace AstCTIClient
                                 this.protocolStatus = PROTOCOL_STATES.LOGGED_IN;
                                 if (this.InvokeRequired)
                                 {
-                                    Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Text", "Stop" });
+                                    Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Text", frmMain.RM.GetString("0009") });
                                     Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Enabled", true });
                                     Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnConfig, "Enabled", false });
                                     Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)lblLineState, "Text", "" });
@@ -491,7 +585,7 @@ namespace AstCTIClient
                                 }
                                 else
                                 {
-                                    this.btnStartStop.Text = "Stop";
+                                    this.btnStartStop.Text = frmMain.RM.GetString("0009");
                                     this.btnStartStop.Enabled = true;
                                     this.btnConfig.Enabled = false;
                                     this.DoFormHide();
@@ -513,7 +607,7 @@ namespace AstCTIClient
         {
             if (this.InvokeRequired)
             {
-                Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Text", "Start" });
+                Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Text", frmMain.RM.GetString("0008") });
                 Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Enabled", true });
                 Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnConfig, "Enabled", true });
                 Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)pnlExtension, "Visible", false});
@@ -522,7 +616,7 @@ namespace AstCTIClient
             }
             else
             {
-                this.btnStartStop.Text = "Start";
+                this.btnStartStop.Text = frmMain.RM.GetString("0008");
                 this.btnStartStop.Enabled = true;
                 this.btnConfig.Enabled = true;
                 this.pnlExtension.Visible = false;
@@ -553,15 +647,12 @@ namespace AstCTIClient
             this.protocolStatus = PROTOCOL_STATES.STATUS_UNKNOWN;
         }
 
-
-        
-
         void ExecCTIApplication(CTIContext ctx, AsteriskCall call)
         {
-            if (!File.Exists(ctx.Application))
+            if ( (!ctx.InternalBrowser) & (!File.Exists(ctx.Application)) )
             {
                 GenericStringAction scf = new GenericStringAction(this.MessageBoxShow);
-                scf.Invoke(string.Format("Invalid application path in Context: {0}", ctx.DisplayName));
+                scf.Invoke(string.Format("{0} {1}", frmMain.RM.GetString("0015"), ctx.DisplayName));
                 return;
             }
             string parameters = ctx.Parameters;
@@ -575,18 +666,48 @@ namespace AstCTIClient
                 parameters = parameters.Replace("{UNIQUEID}", call.Uniqueid);
             }
 
-            System.Diagnostics.Process proc = new System.Diagnostics.Process();
-            proc.EnableRaisingEvents = false;
-            proc.StartInfo.Arguments = parameters;
-            proc.StartInfo.FileName = ctx.Application;
-            proc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            if (ctx.InternalBrowser)
+            {
+                
+                Thread t = new Thread(this.OpenBrowserForm);
+                t.SetApartmentState(ApartmentState.STA);
+                t.Start(parameters);
 
-            proc.Start();
+                //GenericStringAction scf = new GenericStringAction(this.OpenBrowserForm);
+                //scf.Invoke(parameters);
+                
+            }
+            else
+            {
+
+                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                proc.EnableRaisingEvents = false;
+                proc.StartInfo.Arguments = parameters;
+                proc.StartInfo.FileName = ctx.Application;
+                proc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+
+                proc.Start();
+            }
+        }
+
+        public void OpenBrowserForm(object szurl)
+        {
+            string url = (string)szurl;
+            frmExplorer frmExp;
+            if (url != null)
+            {
+                frmExp = new frmExplorer(this.optset, url);
+            }
+            else
+            {
+                frmExp = new frmExplorer(this.optset);
+            }
+            frmExp.ShowDialog();
         }
 
         void OpenCallerIdForm(string calleridnum)
         {
-            frmCallerId frm = new frmCallerId(calleridnum);
+            frmCallerId frm = new frmCallerId(this.optset, calleridnum);
             frm.WindowState = FormWindowState.Normal;
 
             if (this.optset.TriggerCallerId)
@@ -672,9 +793,13 @@ namespace AstCTIClient
 
         private void btnQuit_Click(object sender, EventArgs e)
         {
-            this.sm.AppSettingsObject = optset;
-            this.sm = null;
-            this.Close();
+            try
+            {
+                this.sm.AppSettingsObject = optset;
+                this.sm = null;
+                this.Close();
+            }
+            catch (Exception) { }
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -693,11 +818,11 @@ namespace AstCTIClient
         {
             if (this.txtPhoneNumber.Text.Equals(""))
             {
-                MessageBox.Show(this, "Insert a phone number to dial", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, frmMain.RM.GetString("0016"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;                
             }
             if (this.cboOutboundContextes.SelectedItem == null) {
-                MessageBox.Show(this, "Select the outbound context please!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, frmMain.RM.GetString("0017"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             CTIOutboundContext ctx = (CTIOutboundContext)this.cboOutboundContextes.SelectedItem;
@@ -756,5 +881,63 @@ namespace AstCTIClient
             return ((this.txtPhoneNumber.Text.Length > 0) &
                        (this.cboOutboundContextes.SelectedItem != null));
         }
+
+        #region Localization Action
+
+        public static ResourceManager RM
+        {
+            get
+            {
+                return rm;
+            }
+        }
+
+        private void GlobalizeApp()
+        {
+            SetCulture();
+            SetResource();
+            SetUIChanges();
+        }
+
+        private void SetCulture()
+        {
+            if (optset.Language != "")
+                strCulture = optset.Language;
+
+            CultureInfo objCI = new CultureInfo(strCulture);
+            Thread.CurrentThread.CurrentCulture = objCI;
+            Thread.CurrentThread.CurrentUICulture = objCI;
+
+        }
+        private void SetResource()
+        {
+            rm = ResourceManager.CreateFileBasedResourceManager
+                ("lang", strResourcesPath, null);
+        }
+
+        private void SetUIChanges()
+        {
+
+            this.toolTip1.SetToolTip(this.btnConfig, frmMain.RM.GetString("0001"));
+            this.toolTip1.SetToolTip(this.btnHide, frmMain.RM.GetString("0002"));
+            this.toolTip1.SetToolTip(this.txtPhoneNumber, frmMain.RM.GetString("0003"));
+            this.toolTip1.SetToolTip(this.btnDial, frmMain.RM.GetString("0004"));
+            this.toolTip1.SetToolTip(this.cboOutboundContextes , frmMain.RM.GetString("0005"));
+            this.toolTip1.SetToolTip(this.btnQuit, frmMain.RM.GetString("0007"));
+            this.toolTip1.SetToolTip(this.btnStartStop, frmMain.RM.GetString("0010"));
+
+            this.lblLineState.Text = frmMain.RM.GetString("0100");
+            this.btnQuit.Text = frmMain.RM.GetString("0006");
+            this.btnStartStop.Text = frmMain.RM.GetString("0008");
+
+            this.lblUserName.Text = frmMain.RM.GetString("0011");
+            this.lblSecret.Text = frmMain.RM.GetString("0012");
+            this.mnuShowHide.Text  = frmMain.RM.GetString("0013");
+
+        }
+
+        #endregion
+
+        
     }
 }

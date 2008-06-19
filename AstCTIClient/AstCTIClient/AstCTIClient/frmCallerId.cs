@@ -1,4 +1,4 @@
-// Copyright (C) 2007 Bruno Salzano
+// Copyright (C) 2007-2008 Bruno Salzano
 // http://centralino-voip.brunosalzano.com
 //
 // This program is free software; you can redistribute it and/or modify
@@ -43,25 +43,41 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading;
+using SettingsManager;
+using System.Resources;
+using System.Globalization;
+
 
 namespace AstCTIClient
 {
     public partial class frmCallerId : FadingForm
     {
-        private Timer myTimer;
+        private System.Windows.Forms.Timer myTimer;
+        private string strResourcesPath = Application.StartupPath + Path.DirectorySeparatorChar + "lang";
+        private string strCulture = "en-US";
+        private static ResourceManager rm;
+        private LocalAppSettings optset;
 
-        public frmCallerId(string callerid)
+        public frmCallerId(AppSettings appsettings, string callerid)
         {
             InitializeComponent();
+            this.optset = (LocalAppSettings)appsettings;
             Stream s = this.GetType().Assembly.GetManifestResourceStream("AstCTIClient.callerid.gif");
             Bitmap bmp = new Bitmap(s);
             this.Region = BitmapToRegion.Convert(bmp, bmp.GetPixel(0, 0), TransparencyMode.ColorKeyTransparent);
+            this.Load += new EventHandler(frmCallerId_Load);
             this.Click += new EventHandler(frmCallerId_Click);
             this.lblCallerId.Text = callerid;
             this.lblCallerName.Text = "";
             this.Speed = 10;
             this.MouseEnter += new EventHandler(frmCallerId_MouseEnter);
             this.MouseLeave += new EventHandler(frmCallerId_MouseLeave);
+        }
+
+        void frmCallerId_Load(object sender, EventArgs e)
+        {
+            GlobalizeApp();
         }
 
         void frmCallerId_MouseLeave(object sender, EventArgs e)
@@ -75,7 +91,7 @@ namespace AstCTIClient
         }
         public void StartTimer(int duration)
         {
-            myTimer = new Timer();
+            myTimer = new System.Windows.Forms.Timer();
             myTimer.Interval = duration * 1000;
             myTimer.Tick += new EventHandler(myTimer_Tick);
             myTimer.Enabled = true;
@@ -90,11 +106,52 @@ namespace AstCTIClient
             this.Dispose();
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void lnkLabelClose_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.Dispose();
         }
 
+        #region Localization Action
+
+        public static ResourceManager RM
+        {
+            get
+            {
+                return rm;
+            }
+        }
+
+        private void GlobalizeApp()
+        {
+            SetCulture();
+            SetResource();
+            SetUIChanges();
+        }
+
+        private void SetCulture()
+        {
+            if (optset.Language != "")
+                strCulture = optset.Language;
+
+            CultureInfo objCI = new CultureInfo(strCulture);
+            Thread.CurrentThread.CurrentCulture = objCI;
+            Thread.CurrentThread.CurrentUICulture = objCI;
+
+        }
+        private void SetResource()
+        {
+            rm = ResourceManager.CreateFileBasedResourceManager
+                ("lang", strResourcesPath, null);
+        }
+
+        private void SetUIChanges()
+        {
+            this.lblNewCallFrom.Text = frmCallerId.RM.GetString("0200");
+            this.lnkLabelClose.Text = frmCallerId.RM.GetString("0201");
+
+        }
+
+        #endregion
         
     }
 }

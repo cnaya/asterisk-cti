@@ -1,4 +1,4 @@
-// Copyright (C) 2007 Bruno Salzano
+// Copyright (C) 2007-2008 Bruno Salzano
 // http://centralino-voip.brunosalzano.com
 //
 // This program is free software; you can redistribute it and/or modify
@@ -69,8 +69,67 @@ namespace AstCTIClient
         private int cti_callerid_timeout = 3;
         private int cti_callerid_speed = 10;
 
+        private string language = "en-US";
+
         private bool minimize_on_start = false;
 
+        private bool bIntBrowserShowStatusBar = false;
+        private bool bIntBrowserShowAddressBar = false;
+        private bool bIntBrowserShowGoButton = false;
+        private bool bIntBrowserCanInsertUrls = false;
+        private bool bIntBrowserCloseChilds = false;
+        // private bool bIntBrowserDisableContextMenu = false;
+        // private bool bIntBrowserDisablePopups = false;
+
+        [Category("INTERNAL BROWSER"), Description("Toggle the visibility of the status bar")]
+        public bool ShowStatusBar
+        {
+            get { return bIntBrowserShowStatusBar; }
+            set { this.bIntBrowserShowStatusBar = value; } 
+        }
+
+        [Category("INTERNAL BROWSER"), Description("Toggle the visibility of the address bar")]
+        public bool ShowAddressBar
+        {
+            get { return bIntBrowserShowAddressBar; }
+            set { this.bIntBrowserShowAddressBar = value; } 
+        }
+
+        [Category("INTERNAL BROWSER"), Description("Toggle the visibility of the GO button")]
+        public bool ShowGoButton
+        {
+            get { return bIntBrowserShowGoButton; }
+            set { this.bIntBrowserShowGoButton = value; }
+        }
+
+        [Category("INTERNAL BROWSER"), Description("Toggle the possibility of insert new urls in the address bar")]
+        public bool CanInsertUrls
+        {
+            get { return bIntBrowserCanInsertUrls; }
+            set { this.bIntBrowserCanInsertUrls = value; }
+        }
+
+        [Category("INTERNAL BROWSER"), Description("Close child forms on window close")]
+        public bool CloseChildsOnClose
+        {
+            get { return bIntBrowserCloseChilds; }
+            set { this.bIntBrowserCloseChilds = value; }
+        }
+/*
+        [Category("INTERNAL BROWSER"), Description("Toggle the browser context menu")]
+        public bool DisableContextMenu
+        {
+            get { return bIntBrowserDisableContextMenu; }
+            set { this.bIntBrowserDisableContextMenu = value; }
+        }
+
+        [Category("INTERNAL BROWSER"), Description("Toggle the possibility of popups")]
+        public bool DisablePopups
+        {
+            get { return bIntBrowserDisablePopups; }
+            set { this.bIntBrowserDisablePopups = value; }
+        }
+*/
         [Category("CTI APPLICATION"), Description("CTI Contextes")]
         [TypeConverter(typeof(CTIContextCollectionConverter))]
         public CTIContextCollection CTIContextes
@@ -174,12 +233,18 @@ namespace AstCTIClient
             set { this.mysql_dbms = value; }
         }
 
+        [Category("INTERFACE"), Description( "Language")]
+        public string Language
+        {
+            get { return this.language; }
+            set { this.language = value; }
+        }
+
         [Category("INTERFACE"), Description("Application Gui")]
         public bool MinimizeOnStart
         {
             get { return this.minimize_on_start; }
             set { this.minimize_on_start = value; }
-        }
-        
+        }        
     }
 }

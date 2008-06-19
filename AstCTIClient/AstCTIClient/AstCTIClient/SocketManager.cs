@@ -1,4 +1,4 @@
-// Copyright (C) 2007 Bruno Salzano
+// Copyright (C) 2007-2008 Bruno Salzano
 // http://centralino-voip.brunosalzano.com
 //
 // This program is free software; you can redistribute it and/or modify
@@ -137,7 +137,9 @@ namespace AstCTIClient
                     }
                 }
                 if (remoteAddress == null) return false;
-
+                
+                // Remove me..
+                remoteAddress = IPAddress.Parse(this.pHost);
 				
 				System.Net.IPEndPoint remoteEndPoint = new IPEndPoint(remoteAddress, this.pPort);
 				this.pClientSocket.Connect(remoteEndPoint);
@@ -153,7 +155,7 @@ namespace AstCTIClient
 			} 
 			catch (SocketException ex) 
 			{
-				
+                this.buffer = "";
 				if (this.SocketError != null) this.SocketError(this, ex.Message, ex.ErrorCode);
 				if (this.Disconnected != null) this.Disconnected(this);
 				return false;
@@ -173,6 +175,7 @@ namespace AstCTIClient
 				}
 				catch(Exception) {}
 			}
+            this.buffer = "";
 			if (this.Disconnected != null) this.Disconnected(this);
 		}
 

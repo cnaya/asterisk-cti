@@ -1,4 +1,4 @@
-// Copyright (C) 2007 Bruno Salzano
+// Copyright (C) 2007-2008 Bruno Salzano
 // http://centralino-voip.brunosalzano.com
 //
 // This program is free software; you can redistribute it and/or modify
@@ -35,7 +35,6 @@
 // whether to permit this exception to apply to your modifications.
 // If you do not wish that, delete this exception notice.
 //
-
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2007 Bruno Salzano
+﻿// Copyright (C) 2007-2008 Bruno Salzano
 // http://centralino-voip.brunosalzano.com
 //
 // This program is free software; you can redistribute it and/or modify
@@ -104,12 +104,12 @@ namespace AstCTIClient
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuShowHide});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(112, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(104, 26);
             // 
             // mnuShowHide
             // 
             this.mnuShowHide.Name = "mnuShowHide";
-            this.mnuShowHide.Size = new System.Drawing.Size(111, 22);
+            this.mnuShowHide.Size = new System.Drawing.Size(103, 22);
             this.mnuShowHide.Text = "Show";
             this.mnuShowHide.Click += new System.EventHandler(this.mnuShowHide_Click);
             // 
@@ -191,17 +191,17 @@ namespace AstCTIClient
             // 
             // txtUsername
             // 
-            this.txtUsername.Location = new System.Drawing.Point(81, 118);
+            this.txtUsername.Location = new System.Drawing.Point(96, 118);
             this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(137, 20);
+            this.txtUsername.Size = new System.Drawing.Size(122, 20);
             this.txtUsername.TabIndex = 6;
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(81, 144);
+            this.txtPassword.Location = new System.Drawing.Point(96, 144);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '°';
-            this.txtPassword.Size = new System.Drawing.Size(137, 20);
+            this.txtPassword.Size = new System.Drawing.Size(122, 20);
             this.txtPassword.TabIndex = 8;
             // 
             // lblSecret
