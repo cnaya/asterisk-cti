@@ -39,6 +39,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AstCTIServer
 {
@@ -128,6 +129,16 @@ namespace AstCTIServer
         {
             return new RemoteAddress(data);
         }
+
+        public static bool IsIP(string addr)
+        {
+            string pattern = @"^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$";
+            Regex check = new Regex(pattern);
+            if (addr == "") return false;
+
+            return check.IsMatch(addr, 0);
+
+        } 
         #endregion
     }
 }

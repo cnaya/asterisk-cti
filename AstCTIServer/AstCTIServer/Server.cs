@@ -87,9 +87,11 @@ namespace AstCTIServer
 
             Server.shared = new SharedState();
             Server.logger = new FileLogger();
-            
-            foreach(string arg in args) {
-                if (arg.ToLower().Equals("--debug")) {
+
+            foreach (string arg in args)
+            {
+                if (arg.ToLower().Equals("--debug"))
+                {
                     Server.debug = true;
                 }
             }
@@ -100,7 +102,7 @@ namespace AstCTIServer
                 Server.logger.WriteLine(LogType.Debug, "Connecting to database on: " + cfg.MYSQL_HOST);
                 Server.cn = new MySqlConnection(cfg.MYSQL_CONNSTR);
                 Server.cn.Open();
-                
+
                 // La connessione al database è ok
                 Server.logger.WriteLine(LogType.Debug, "Database connection successful");
                 if (Server.debug) Console.WriteLine("Database connection successful");
@@ -132,13 +134,13 @@ namespace AstCTIServer
 
         public MainServer()
         {
-            
+
             this.activeCalls = new Hashtable();
             this.ctiserver = new CTIServer();
             // ctiserver.StartListening();
 
             sock = new SocketManager(Server.cfg.MANAGER_HOST, Server.cfg.MANAGER_PORT);
-            sock.Connected+=new SocketManager.OnConnected(sock_Connected);
+            sock.Connected += new SocketManager.OnConnected(sock_Connected);
             sock.DataArrival += new SocketManager.OnDataArrival(sock_DataArrival);
             sock.Disconnected += new SocketManager.OnDisconnected(sock_Disconnected);
             sock.SocketError += new SocketManager.OnSocketError(sock_SocketError);
@@ -151,7 +153,7 @@ namespace AstCTIServer
 
         void StartServer()
         {
-            
+
             while (true)
             {
                 Thread.Sleep(500);
@@ -170,11 +172,11 @@ namespace AstCTIServer
 
         void sock_Disconnected(object sender)
         {
-            if (Server.debug)  Console.WriteLine("Asterisk disconnected. Trying again in 10 seconds");
+            if (Server.debug) Console.WriteLine("Asterisk disconnected. Trying again in 10 seconds");
             this.loggedIn = false;
             Thread.Sleep(10 * 1000);
 
-            
+
             sock.Connect();
 
         }
@@ -189,12 +191,12 @@ namespace AstCTIServer
                 dataBuffer = "";
                 ParseData(preparsed);
             }
-            
+
         }
 
         void sock_Connected(object sender)
         {
-            if (Server.debug)  Console.WriteLine("Asterisk Connection in progress");
+            if (Server.debug) Console.WriteLine("Asterisk Connection in progress");
             string login = "Action: Login\r\n" +
                                      "Username: " + Server.cfg.MANAGER_USER + "\r\n" +
                                      "Secret: " + Server.cfg.MANAGER_PASS + "\r\n\r\n";
@@ -208,7 +210,7 @@ namespace AstCTIServer
             {
                 if (data.Contains("Authentication accepted"))
                 {
-                    if (Server.debug)  Console.WriteLine("Authentication successful");
+                    if (Server.debug) Console.WriteLine("Authentication successful");
                     this.loggedIn = true;
                     return;
                 }
@@ -221,10 +223,11 @@ namespace AstCTIServer
             {
                 Hashtable evt = HashFromMessage(data);
                 this.EvaluateEvent(evt);
-            }   
+            }
         }
 
-        private void EvaluateEvent(Hashtable evt) {
+        private void EvaluateEvent(Hashtable evt)
+        {
             string szEvent = (string)evt["Event"];
             string Uniqueid = null;
             string Uniqueid2 = null;
@@ -250,7 +253,7 @@ namespace AstCTIServer
 
                     if (Server.debug) Console.WriteLine("Newchannel - " + call.ToString());
                     Server.logger.WriteLine(LogType.Debug, "Newchannel - " + call.ToString());
-                    AddActiveCall(Uniqueid, call);                              
+                    AddActiveCall(Uniqueid, call);
                     break;
                 /*
                  * Event: Newstate
@@ -280,7 +283,7 @@ namespace AstCTIServer
 
                         tmpCall = null;
                         tmpEvt = null;
-                        
+
                     }
                     break;
                 /*
@@ -303,11 +306,11 @@ namespace AstCTIServer
                     {
                         Uniqueid = (string)evt["Uniqueid"];
                         Context = (string)evt["Context"];
-                       
+
                         call = GetActiveCall(Uniqueid);
                         if (call == null)
                         {
-                            call = new AsteriskCall();                            
+                            call = new AsteriskCall();
                         }
                         call.Context = Context;
                         call.Uniqueid = Uniqueid;
@@ -321,8 +324,8 @@ namespace AstCTIServer
                 case "Newexten":
                     Uniqueid = (string)evt["Uniqueid"];
                     Context = (string)evt["Context"];
-                    
-                    
+
+
 
                     call = GetActiveCall(Uniqueid);
                     if (call == null)
@@ -351,7 +354,7 @@ namespace AstCTIServer
                                 }
                             }
                             break;
-                    }                    
+                    }
                     break;
                 /*
                  * Here we should notify the client..
@@ -405,7 +408,7 @@ namespace AstCTIServer
                         astevt = new AsteriskEvent();
                         astevt.Call = call1;
                         astevt.Event = "Link";
-                        
+
                         Destination = AsteriskCall.ParseChannel((string)evt["Channel2"]);
                         if (Destination != null)
                         {
@@ -414,7 +417,7 @@ namespace AstCTIServer
                         }
                     }
                     break;
-                
+
                 /*
                  * This event happens after a Dial command and usually before a Ringing event
                  * and it's unique id is of the dialed extension. So we can notify when this happens
@@ -435,7 +438,10 @@ namespace AstCTIServer
                         astevt = new AsteriskEvent();
                         astevt.Call = call;
                         astevt.Event = "Newcallerid";
-                        SendMessage(call.ParsedChannel, astevt.ToXML());
+                        if (call.ParsedChannel != null) //BI (Beppe Innamorato) 16/10/08 inserted if
+                        {
+                            SendMessage(call.ParsedChannel, astevt.ToXML());
+                        }
                     }
 
                     break;
@@ -451,17 +457,20 @@ namespace AstCTIServer
                         astevt = new AsteriskEvent();
                         astevt.Call = call;
                         astevt.Event = "Hangup";
-                        SendMessage(call.ParsedChannel, astevt.ToXML());
+                        if (call.ParsedChannel != null) //BI (Beppe Innamorato) 16/10/08 inserted if
+                        {
+                            SendMessage(call.ParsedChannel, astevt.ToXML());
+                        }
                         if (Server.debug) Console.WriteLine("Hangup - " + call.ToString());
                         Server.logger.WriteLine(LogType.Debug, "Hangup - " + call.ToString());
                         RemoveActiveCall(Uniqueid);
                     }
-                    
+
                     break;
                 default:
-                    
+
                     break;
-            }            
+            }
         }
 
         public void SendDataToAsterisk(string data)
@@ -488,7 +497,7 @@ namespace AstCTIServer
         private AsteriskCall GetActiveCall(string uniqueid)
         {
             return (this.activeCalls.ContainsKey(uniqueid)) ? (AsteriskCall)this.activeCalls[uniqueid] : null;
-            
+
         }
 
         private void AddActiveCall(string uniqueid, AsteriskCall dest)
@@ -522,10 +531,10 @@ namespace AstCTIServer
             }
         }
 
-        private void SendUdpMessage(IPEndPoint ep, string message) 
+        private void SendUdpMessage(IPEndPoint ep, string message)
         {
             try
-            {                
+            {
                 if (ep != null)
                 {
                     string msg = message + "\0";
@@ -543,7 +552,7 @@ namespace AstCTIServer
             }
         }
 
-        
+
 
         private Hashtable HashFromMessage(string data)
         {
@@ -564,7 +573,7 @@ namespace AstCTIServer
             return t;
         }
 
-        
+
     }
-    
+
 }

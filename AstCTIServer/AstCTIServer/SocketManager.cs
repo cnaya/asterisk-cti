@@ -128,7 +128,8 @@ namespace AstCTIServer
 				this.pClientSocket = new Socket(AddressFamily.InterNetwork,
 					SocketType.Stream, ProtocolType.Tcp);
                 System.Net.IPAddress remoteAddress = null;
-                if (this.pHost.Equals("127.0.0.1"))
+
+                if (RemoteAddress.IsIP(this.pHost))
                 {
                     remoteAddress = IPAddress.Parse(this.pHost);
                 }

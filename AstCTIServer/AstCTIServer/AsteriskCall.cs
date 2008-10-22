@@ -61,6 +61,8 @@ namespace AstCTIServer
             {
                 if (this.Channel.Contains("-"))
                     this.ParsedChannel = AsteriskCall.ParseChannel(this.Channel);
+                else
+                    this.ParsedChannel = this.Channel;  // BI (Beppe Innamorato) 16/10/08 Fix the server crash when Agent are used          
             }
             else
             {
@@ -74,7 +76,8 @@ namespace AstCTIServer
             if (channel.Contains("-"))
                 return channel.Substring(0, channel.IndexOf("-"));
             else
-                return null;
+                // return null; BI (Beppe Innamorato) 16/10/08 Fix the server crash when Agent are used
+                return channel;
         }
 
         public override string ToString()
