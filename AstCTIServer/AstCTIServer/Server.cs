@@ -256,33 +256,81 @@ namespace AstCTIServer
                     AddActiveCall(Uniqueid, call);
                     break;
                 /*
+                 * Ringing: some phone is ringing? This should be trigger callerid
+                 */
+                case "Dial":
+                    Uniqueid = (string)evt["SrcUniqueID"]; // Caller
+                    Uniqueid2 = (string)evt["DestUniqueID"]; // Called
+
+                    call = GetActiveCall(Uniqueid); // caller extension..
+                    call1 = GetActiveCall(Uniqueid2); // called extension..
+                    if ( (call != null) && (call1 != null) )
+                    {
+                        string callerid = (string)evt["CallerID"];
+                        string calleridname = (string)evt["CallerIDName"];
+                        
+                        call1.CallerIDNum = callerid;
+                        call1.CallerIDName = calleridname;
+                        astevt = new AsteriskEvent();
+                        astevt.Call = call1;
+                        astevt.Event = "Newcallerid";
+                        if (call1.ParsedChannel != null) //BI (Beppe Innamorato) 16/10/08 inserted if
+                        {
+                            SendMessage(call1.ParsedChannel, astevt.ToXML());
+                        }
+                    }
+                    break;
+                /*
+                 * Example
                  * Event: Newstate
                  * Privilege: call,all
-                 * Channel: SIP/201-0821bba8
+                 * Channel: SIP/201-0080e6e0
                  * State: Ringing
-                 * CallerID: <unknown>
-                 * CallerIDName: SIP/201
-                 * Uniqueid: 1193987667.38
+                 * CallerID: 202
+                 * CallerIDName: Test 202
+                 * Uniqueid: asterisk-5559-1224799548.57
+
                  */
                 case "Newstate":
                     Destination = AsteriskCall.ParseChannel((string)evt["Channel"]);
                     if (Destination != null)
                     {
-                        AsteriskEvent tmpEvt = new AsteriskEvent();
-                        tmpEvt.Event = "Newstate";
+                        string state = (string)evt["State"];
+                        if ((state != null) & (state.Equals("Ringing")))
+                        {
+                            Uniqueid = (string)evt["Uniqueid"]; // Caller
+                            call = GetActiveCall(Uniqueid);
 
-                        AsteriskCall tmpCall = new AsteriskCall();
-                        tmpCall.Uniqueid = (string)evt["Uniqueid"];
-                        tmpCall.CallerIDNum = (string)evt["CallerID"];
-                        tmpCall.CallerIDName = (string)evt["CallerIDName"];
-                        tmpCall.Channel = (string)evt["Channel"];
-                        tmpCall.State = (string)evt["State"];
+                            string callerid = (string)evt["CallerID"];
+                            string calleridname = (string)evt["CallerIDName"];
 
-                        tmpEvt.Call = tmpCall;
-                        SendMessage(Destination, tmpEvt.ToXML());
+                            call.CallerIDNum = callerid;
+                            call.CallerIDName = calleridname;
+                            astevt = new AsteriskEvent();
+                            astevt.Call = call;
+                            astevt.Event = "Newcallerid";
+                            
+                            SendMessage(Destination, astevt.ToXML());
+                            
+                        }
+                        else
+                        {
+                            AsteriskEvent tmpEvt = new AsteriskEvent();
+                            tmpEvt.Event = "Newstate";
 
-                        tmpCall = null;
-                        tmpEvt = null;
+                            AsteriskCall tmpCall = new AsteriskCall();
+                            tmpCall.Uniqueid = (string)evt["Uniqueid"];
+                            tmpCall.CallerIDNum = (string)evt["CallerID"];
+                            tmpCall.CallerIDName = (string)evt["CallerIDName"];
+                            tmpCall.Channel = (string)evt["Channel"];
+                            tmpCall.State = (string)evt["State"];
+
+                            tmpEvt.Call = tmpCall;
+                            SendMessage(Destination, tmpEvt.ToXML());
+
+                            tmpCall = null;
+                            tmpEvt = null;
+                        }
 
                     }
                     break;
@@ -423,26 +471,26 @@ namespace AstCTIServer
                  * and it's unique id is of the dialed extension. So we can notify when this happens
                  */
                 case "Newcallerid":
-                    Uniqueid = (string)evt["Uniqueid"];
-                    call = GetActiveCall(Uniqueid); // called extension..
+                    //Uniqueid = (string)evt["Uniqueid"];
+                    //call = GetActiveCall(Uniqueid); // called extension..
 
-                    if (call != null)
-                    {
-                        string callerid = (string)evt["CallerID"];
-                        string calleridname = (string)evt["CallerIDName"];
-                        call.CallerIDNum = callerid;
-                        call.CallerIDName = calleridname;
-                        AddActiveCall(Uniqueid, call);   // Update the call info..
-                        if (Server.debug) Console.WriteLine("Newcallerid - " + call.ToString());
+                    //if (call != null)
+                    //{
+                    //    string callerid = (string)evt["CallerID"];
+                    //    string calleridname = (string)evt["CallerIDName"];
+                    //    call.CallerIDNum = callerid;
+                    //    call.CallerIDName = calleridname;
+                    //    AddActiveCall(Uniqueid, call);   // Update the call info..
+                    //    if (Server.debug) Console.WriteLine("Newcallerid - " + call.ToString());
 
-                        astevt = new AsteriskEvent();
-                        astevt.Call = call;
-                        astevt.Event = "Newcallerid";
-                        if (call.ParsedChannel != null) //BI (Beppe Innamorato) 16/10/08 inserted if
-                        {
-                            SendMessage(call.ParsedChannel, astevt.ToXML());
-                        }
-                    }
+                    //    astevt = new AsteriskEvent();
+                    //    astevt.Call = call;
+                    //    astevt.Event = "Newcallerid";
+                    //    if (call.ParsedChannel != null) //BI (Beppe Innamorato) 16/10/08 inserted if
+                    //    {
+                    //        SendMessage(call.ParsedChannel, astevt.ToXML());
+                    //    }
+                    //}
 
                     break;
                 /*
@@ -496,6 +544,7 @@ namespace AstCTIServer
 
         private AsteriskCall GetActiveCall(string uniqueid)
         {
+            if (uniqueid == null) return null;
             return (this.activeCalls.ContainsKey(uniqueid)) ? (AsteriskCall)this.activeCalls[uniqueid] : null;
 
         }
