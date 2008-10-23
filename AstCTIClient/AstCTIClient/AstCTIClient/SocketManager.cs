@@ -125,22 +125,32 @@ namespace AstCTIClient
 				this.pClientSocket = new Socket(AddressFamily.InterNetwork,
 					SocketType.Stream, ProtocolType.Tcp);
 				
-				IPHostEntry hostEntry = System.Net.Dns.GetHostEntry(this.pHost);
-                
-				if (hostEntry.AddressList.Length < 1) return false;
-                System.Net.IPAddress remoteAddress = null;
-                foreach (IPAddress ip in hostEntry.AddressList)
+				System.Net.IPAddress remoteAddress = null;
+
+                if (RemoteAddress.IsIP(this.pHost))
                 {
-                    if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    remoteAddress = IPAddress.Parse(this.pHost);
+                }
+                else
+                {
+                    IPHostEntry hostEntry = System.Net.Dns.GetHostEntry(this.pHost);
+
+                    if (hostEntry.AddressList.Length < 1)
                     {
-                        remoteAddress = ip;
+                        return false;
+                    }
+                    foreach (IPAddress ip in hostEntry.AddressList)
+                    {
+                        if (ip.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            remoteAddress = ip;
+                            break;
+                        }
                     }
                 }
-                if (remoteAddress == null) return false;
-                
-                // Remove me..
-                remoteAddress = IPAddress.Parse(this.pHost);
-				
+
+
+
 				System.Net.IPEndPoint remoteEndPoint = new IPEndPoint(remoteAddress, this.pPort);
 				this.pClientSocket.Connect(remoteEndPoint);
 				if(this.pClientSocket.Connected) 

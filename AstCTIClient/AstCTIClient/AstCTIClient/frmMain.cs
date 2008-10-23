@@ -783,6 +783,13 @@ namespace AstCTIClient
                 {
                     this.noOpTimer.Interval = this.optset.SocketTimeout;
                 }
+
+                // this should refresh the socketmanager
+                if (this.socketmanager != null)
+                {
+                    this.socketmanager.Host = this.optset.Host;
+                    this.socketmanager.Port = this.optset.Port;
+                }
             }
             catch (Exception ex)
             {
