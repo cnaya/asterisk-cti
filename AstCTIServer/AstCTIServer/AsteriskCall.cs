@@ -54,7 +54,8 @@ namespace AstCTIServer
         public string AppData = null;
         public string State = null;
         public IPEndPoint EndPoint = null;
-
+        public bool isDialed = false;
+        
         public void ParseDestination()
         {
             if (this.Channel != null)
