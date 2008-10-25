@@ -1,0 +1,32 @@
+0001=Configuration
+0002=Réduire au minimum à plateau
+0003=Composez le numéro
+0004=Composez le numéro
+0005=Contexte de Numérotation
+0006=Quitter
+0007=Quitter l'application
+0008=Démarrer
+0009=Arrêter
+0010=Démarrer/Arrêter CTI Client
+0011=Nom d'utilisateur
+0012=Secret
+0013=Show
+0014=Invalid pouvoirs
+0015=Invalid path application dans son Contexte
+0016=Insérer un numéro de téléphone à composer
+0017=Sélectionnez le contexte sortant s'il vous plaît!
+
+0100=Situation ligne
+0101=Off Hook
+0102=Baguage
+0103=Sur le crochet
+0104=Connectés
+0105=Hangup
+
+0200=Nouvel appel à partir de:
+0201=Cliquez pour fermer
+
+0300=Aller
+
+9000=Test 1
+9001=Test 2

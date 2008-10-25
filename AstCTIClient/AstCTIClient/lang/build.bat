@@ -5,5 +5,6 @@ IF NOT EXIST "..\bin\Release\lang" mkdir "..\bin\Release\lang"
 
 for %%i in ("src\*.txt") do resgen %%i
 move "src\*.resources" "bin\"
-copy "bin\*.resources" "..\bin\Debug\lang"
+copy "bin\*.resources" "..\..\..\Binaries\AstCTIClient\lang"
+pause
 @echo on
