@@ -354,44 +354,6 @@ namespace AstCTIClient
             }
         }
 
-        //private bool MySQLUnRegister()
-        //{
-        //    string connStr = "Persist Security Info=False;" +
-        //             "database=" + this.optset.MySQLDatabase + ";" +
-        //             "server=" + this.optset.MySQLHost + ";" +
-        //             "user id=" + this.optset.MySQLUserName + ";" +
-        //             "Password=" + this.optset.MySQLPassword + ";" +
-        //             "Compress=false";
-        //    MySqlCommand cmd = null;
-            
-        //    MySqlConnection cn = new MySqlConnection(connStr);
-        //    try
-        //    {
-        //        string sql = "";
-
-        //        cn.Open();
-        //        sql = "DELETE FROM cti WHERE HOST=?host";
-
-        //        cmd = new MySqlCommand(sql, cn);
-        //        cmd.Parameters.Add(new MySqlParameter("?host", this.optset.Host));
-        //        cmd.Prepare();
-
-        //        cmd.ExecuteNonQuery();
-
-        //        cmd.Dispose();
-        //        cn.Close();
-        //        cn.Dispose();
-
-        //        return true;
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        return false;
-        //    }
-        //}
-
         public void DoFormHide()
         {
             if (this.InvokeRequired)
@@ -462,7 +424,6 @@ namespace AstCTIClient
             else
             {
                 this.socketmanager.Disconnect();
-                //MySQLUnRegister();
                 this.pnlExtension.Visible = false;
             }
         }

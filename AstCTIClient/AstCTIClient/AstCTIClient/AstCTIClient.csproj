@@ -28,7 +28,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\Binaries\AstCTIClient\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -38,6 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MySql.Data, Version=5.1.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -107,6 +108,7 @@
     </Compile>
     <Compile Include="ProtocolParser.cs" />
     <Compile Include="RegistryManager.cs" />
+    <Compile Include="RemoteAddress.cs" />
     <Compile Include="SocketManager.cs" />
     <Compile Include="WMI.cs" />
   </ItemGroup>
@@ -114,7 +116,7 @@
     <EmbeddedResource Include="callerid.gif" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\SettingsManager\SettingsManager\SettingsManager.csproj">
+    <ProjectReference Include="..\..\SettingsManager\SettingsManager\SettingsManager.csproj">
       <Project>{CB278D35-5D0A-4BCD-BBE2-57990AC9C1EF}</Project>
       <Name>SettingsManager</Name>
     </ProjectReference>
