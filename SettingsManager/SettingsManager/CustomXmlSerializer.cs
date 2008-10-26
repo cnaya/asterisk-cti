@@ -1,4 +1,4 @@
-// Copyright (C) 2007 Bruno Salzano
+// Copyright (C) 2007-2008 Bruno Salzano
 // http://centralino-voip.brunosalzano.com
 //
 // This program is free software; you can redistribute it and/or modify
@@ -1201,9 +1201,21 @@ namespace SettingsManager
 
 					if (IsDataType(_Value) | _Value is System.Enum)
 					{
-						writer.WriteStartElement(_Property.Name);
-						WriteString(_Value, writer);
-						writer.WriteEndElement();
+                        writer.WriteStartElement(_Property.Name);
+                        switch (_Property.Name)
+                        {
+                            case "InterfaceFont":
+                                string val = SMFontConverter.ToBase64String((System.Drawing.Font)_Value);                                
+                                WriteString(val, writer);
+                                break;
+                            default:
+                                WriteString(_Value, writer);
+                                break;
+                        }
+
+                        writer.WriteEndElement();
+
+						
 					}
 					else if (_Value is System.Array)
 					{
@@ -1594,6 +1606,8 @@ namespace SettingsManager
 					return true;
 				case  "USHORT":
 					return true;
+                case "SYSTEM.DRAWING.FONT":
+                    return true;
 				default:
 					return false;
 			}
@@ -1892,7 +1906,7 @@ namespace SettingsManager
 				case "OBJECT":
 					//FIX: July 13, 2006 - System.Object Support
 					target = dataValue;
-					break;
+					break;                
 				default:
 					throw new System.InvalidCastException("An error occurred while assigning a value to " + target.GetType().FullName + ". Casting to type, " + valueType.ToUpper().Trim() + ", is not supported.");
 			}
@@ -2077,6 +2091,11 @@ namespace SettingsManager
 					//FIX: July 13, 2006 - System.Object Support
 					targetField.SetValue(target, dataValue);
 					break;
+                case "SYSTEM.DRAWING.FONT":
+
+                    System.Drawing.Font fnt = SMFontConverter.FromBase64String((string)dataValue);
+                    targetField.SetValue(target, fnt);
+                    break;
 				default:
 					throw new System.InvalidCastException("An error occurred while assigning a value to " + target.GetType().FullName + ". Casting to type, " + targetField.FieldType.FullName.ToUpper() + ", is not supported.");
 			}
@@ -2095,7 +2114,7 @@ namespace SettingsManager
 		/// </remarks>
 		private void SaveValue(ref object target, System.Reflection.PropertyInfo targetProperty, object dataValue)
 		{
-			if (targetProperty.CanWrite)
+            if (targetProperty.CanWrite)
 			{
 				switch (targetProperty.PropertyType.FullName.ToUpper())
 				{
@@ -2199,8 +2218,14 @@ namespace SettingsManager
 						targetProperty.SetValue(target, System.Convert.ToSingle(dataValue), null);
 						break;
 					case "SYSTEM.STRING":
-						targetProperty.SetValue(target, System.Convert.ToString(dataValue), null);
-						break;
+                        targetProperty.SetValue(target, System.Convert.ToString(dataValue), null);
+                        break;
+                        
+                    case "SYSTEM.DRAWING.FONT":
+
+                        System.Drawing.Font fnt = SMFontConverter.FromBase64String((string)dataValue);
+                        targetProperty.SetValue(target, fnt, null);
+                        break;
 					case "STRING":
 						targetProperty.SetValue(target, System.Convert.ToString(dataValue), null);
 						break;
@@ -2259,7 +2284,7 @@ namespace SettingsManager
 						//FIX: July 13, 2006 - System.Object Support
 						targetProperty.SetValue(target, dataValue, null);
 						break;
-					case "OBJECT":
+                   	case "OBJECT":
 						//FIX: July 13, 2006 - System.Object Support
 						targetProperty.SetValue(target, dataValue, null);
 						break;

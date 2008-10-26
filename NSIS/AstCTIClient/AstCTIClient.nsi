@@ -75,6 +75,7 @@ Section "SezionePrincipale" SEC01
   File "..\..\Binaries\AstCTIClient\lang\lang.en-US.resources"
   File "..\..\Binaries\AstCTIClient\lang\lang.it-IT.resources"
   File "..\..\Binaries\AstCTIClient\lang\lang.fr-FR.resources"
+  File "..\..\Binaries\AstCTIClient\lang\lang.ru-RU.resources"
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
   File "..\..\Docs\README.rtf"
@@ -104,7 +105,7 @@ Function un.onUninstSuccess
 FunctionEnd
 
 Function un.onInit
-  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Sei sicuro di voler completamente rimuovere $(^Name) e tutti i suoi componenti?" IDYES +2
+  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Sure to remove $(^Name) and all it's components ?" IDYES +2
   Abort
 FunctionEnd
 
@@ -127,6 +128,7 @@ Section Uninstall
   Delete "$INSTDIR\lang\lang.en-US.resources"
   Delete "$INSTDIR\lang\lang.it-IT.resources"
   Delete "$INSTDIR\lang\lang.fr-FR.resources"
+  Delete "$INSTDIR\lang\lang.ru-RU.resources"
   Delete "$SMPROGRAMS\AstCTIClient\Uninstall.lnk"
   Delete "$SMPROGRAMS\AstCTIClient\Website.lnk"
   Delete "$DESKTOP\AstCTIClient.lnk"

@@ -43,6 +43,7 @@ using System.Collections.Specialized;
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Drawing.Design;
+using System.Drawing;
 using SettingsManager;
 
 namespace AstCTIClient
@@ -80,6 +81,8 @@ namespace AstCTIClient
         private bool bIntBrowserCloseChilds = false;
         // private bool bIntBrowserDisableContextMenu = false;
         // private bool bIntBrowserDisablePopups = false;
+
+        private Font fntInterface = new Font("Microsoft Sans Serif", 8);
 
         [Category("INTERNAL BROWSER"), Description("Toggle the visibility of the status bar")]
         public bool ShowStatusBar
@@ -239,6 +242,15 @@ namespace AstCTIClient
             get { return this.language; }
             set { this.language = value; }
         }
+
+        [Category("INTERFACE"), Description("Font")]
+        public Font InterfaceFont
+        {
+            get { return this.fntInterface ; }
+            set { this.fntInterface = value; }
+        }
+
+        
 
         [Category("INTERFACE"), Description("Application Gui")]
         public bool MinimizeOnStart

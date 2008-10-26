@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
     <Compile Include="CustomXmlSerializer.cs" />
+    <Compile Include="FontConverter.cs" />
     <Compile Include="OptionsDialog.cs">
       <SubType>Form</SubType>
     </Compile>

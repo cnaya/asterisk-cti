@@ -117,6 +117,7 @@ namespace AstCTIClient
             this.protocolStatus = PROTOCOL_STATES.STATUS_UNKNOWN;
             this.lblLineState.Text = "";
             sm = new SettingsManager.SettingsManager();
+
             
 
             this.CheckRegistrySettings();
@@ -156,10 +157,19 @@ namespace AstCTIClient
                 
                 MessageBox.Show(ex.ToString());
             }
-
+            this.FormSetFont();
             
         }
 
+        void FormSetFont()
+        {
+            Font interfaceFont = this.optset.InterfaceFont;
+              
+            foreach (Control ctl in this.Controls)
+            {
+                ctl.Font = interfaceFont;
+            }
+        }
 
         void frmMain_Load(object sender, EventArgs e)
         {
@@ -739,6 +749,9 @@ namespace AstCTIClient
                 this.lblExtension.Text = optset.PhoneExt;
 
                 this.UpdateOutboundContextes();
+
+                this.GlobalizeApp();
+                this.FormSetFont();
 
                 if (this.noOpTimer != null)
                 {
