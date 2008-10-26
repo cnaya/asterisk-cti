@@ -1,0 +1,32 @@
+﻿0001=Configuración
+0002=Minimizar a la bandeja
+0003=Marcar número
+0004=Marcar número
+0005=Contexto de Marcado
+0006=Salir
+0007=Salir de la Aplicación
+0008=Iniciar
+0009=Detener
+0010=Inicia/Detiene el cliente CTI
+0011=Usuario
+0012=Contraseña
+0013=Mostrar
+0014=Credenciales Invalidas
+0015=Ruta de aplicación invalida en el contexto:
+0016=Inserte número telefonico a marcar
+0017=Porfavor, seleccione el contexto saliente!
+
+0100=Estado de la linea
+0101=Descolgada
+0102=Timbrando
+0103=Colgada
+0104=Conectada
+0105=Colgada
+
+0200=Nueva llamada de:
+0201=De click para cerrar
+
+0300=Ir
+
+9000=Prueba 1
+9001=Prueba 2
