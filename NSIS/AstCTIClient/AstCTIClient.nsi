@@ -76,6 +76,8 @@ Section "SezionePrincipale" SEC01
   File "..\..\Binaries\AstCTIClient\lang\lang.it-IT.resources"
   File "..\..\Binaries\AstCTIClient\lang\lang.fr-FR.resources"
   File "..\..\Binaries\AstCTIClient\lang\lang.ru-RU.resources"
+  File "..\..\Binaries\AstCTIClient\lang\lang.es-MX.resources"
+  File "..\..\Binaries\AstCTIClient\lang\lang.es-ES.resources"  
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
   File "..\..\Docs\README.rtf"
@@ -129,6 +131,8 @@ Section Uninstall
   Delete "$INSTDIR\lang\lang.it-IT.resources"
   Delete "$INSTDIR\lang\lang.fr-FR.resources"
   Delete "$INSTDIR\lang\lang.ru-RU.resources"
+  Delete "$INSTDIR\lang\lang.es-MX.resources"
+  Delete "$INSTDIR\lang\lang.es-ES.resources"
   Delete "$SMPROGRAMS\AstCTIClient\Uninstall.lnk"
   Delete "$SMPROGRAMS\AstCTIClient\Website.lnk"
   Delete "$DESKTOP\AstCTIClient.lnk"
