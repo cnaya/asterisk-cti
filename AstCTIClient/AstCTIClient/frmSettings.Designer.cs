@@ -91,6 +91,8 @@ namespace AstCTIClient
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.txtMysqlDatabase = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.btnDbTest = new System.Windows.Forms.Button();
             this.txtMysqlPort = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -123,8 +125,6 @@ namespace AstCTIClient
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnConfirm = new System.Windows.Forms.Button();
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
-            this.txtMysqlDatabase = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -412,6 +412,25 @@ namespace AstCTIClient
             this.groupBox3.Tag = "8007";
             this.groupBox3.Text = "Connessione al Database";
             // 
+            // txtMysqlDatabase
+            // 
+            this.txtMysqlDatabase.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMysqlDatabase.Location = new System.Drawing.Point(211, 50);
+            this.txtMysqlDatabase.Name = "txtMysqlDatabase";
+            this.txtMysqlDatabase.Size = new System.Drawing.Size(198, 20);
+            this.txtMysqlDatabase.TabIndex = 2;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(6, 53);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(53, 13);
+            this.label10.TabIndex = 8;
+            this.label10.Tag = "8001";
+            this.label10.Text = "Database";
+            // 
             // btnDbTest
             // 
             this.btnDbTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -419,7 +438,7 @@ namespace AstCTIClient
             this.btnDbTest.Name = "btnDbTest";
             this.btnDbTest.Size = new System.Drawing.Size(96, 23);
             this.btnDbTest.TabIndex = 6;
-            this.btnDbTest.Tag = "8036";
+            this.btnDbTest.Tag = "8035";
             this.btnDbTest.Text = "Test";
             this.btnDbTest.UseVisualStyleBackColor = true;
             this.btnDbTest.Click += new System.EventHandler(this.btnDbTest_Click);
@@ -1014,25 +1033,6 @@ namespace AstCTIClient
             this.btnConfirm.Text = "Conferma";
             this.btnConfirm.UseVisualStyleBackColor = true;
             this.btnConfirm.Click += new System.EventHandler(this.btnConfirm_Click);
-            // 
-            // txtMysqlDatabase
-            // 
-            this.txtMysqlDatabase.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtMysqlDatabase.Location = new System.Drawing.Point(211, 50);
-            this.txtMysqlDatabase.Name = "txtMysqlDatabase";
-            this.txtMysqlDatabase.Size = new System.Drawing.Size(198, 20);
-            this.txtMysqlDatabase.TabIndex = 2;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(6, 53);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(53, 13);
-            this.label10.TabIndex = 8;
-            this.label10.Tag = "8001";
-            this.label10.Text = "Database";
             // 
             // frmSettings
             // 
