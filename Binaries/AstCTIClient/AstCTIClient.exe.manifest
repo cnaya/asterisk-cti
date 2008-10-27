@@ -4,7 +4,7 @@
   <description asmv2:iconFile="linphone.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="AstCTIClient" version="1.0.1.0" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="AstCTIClient" version="1.0.2.0" language="neutral" processorArchitecture="msil" />
     <commandLine file="AstCTIClient.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -28,14 +28,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AstCTIClient.exe" size="253952">
-      <assemblyIdentity name="AstCTIClient" version="1.0.1.0" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AstCTIClient.exe" size="356352">
+      <assemblyIdentity name="AstCTIClient" version="1.0.2.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>RnUdVpYdLchgx/rU+Ue6x41G2/M=</dsig:DigestValue>
+        <dsig:DigestValue>bDd+IAKFP5lboPRlX80HSOK6Zpw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -47,31 +47,31 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>bjCKQyJNuclBFRbVdEMMt2B+aik=</dsig:DigestValue>
+        <dsig:DigestValue>Qu6iFL+bjNXn//RHy8FCQYpWtYk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Interop.SHDocVw.dll" size="126976">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Interop.SHDocVw.dll" size="131072">
       <assemblyIdentity name="Interop.SHDocVw" version="1.1.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>vGlbmiP4YrcOShuBHYRK8+puWHA=</dsig:DigestValue>
+        <dsig:DigestValue>YtOf2+QInVP3UEYaQV8MpiDNIys=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MySql.Data.dll" size="294912">
-      <assemblyIdentity name="MySql.Data" version="5.2.3.0" publicKeyToken="C5687FC88969C44D" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MySql.Data.dll" size="266240">
+      <assemblyIdentity name="MySql.Data" version="5.0.7.0" publicKeyToken="C5687FC88969C44D" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>ZzSpy3SIUxHuh/0rTLHDuIuNPmM=</dsig:DigestValue>
+        <dsig:DigestValue>OP+oLm5Hkyzxv+nrZBdWXPJZj0w=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -83,7 +83,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>L8h+93q3XyNb5Zzw6oOyZm/Cyt8=</dsig:DigestValue>
+        <dsig:DigestValue>hx8UiHjv/zzSqOsOP6RsnJ88q1k=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -112,6 +112,15 @@
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
       <dsig:DigestValue>Ah/ekgUhDocrUfqsGAreSkeGkPU=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="locales.txt" size="3261">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>WUh72m6WXuDMXfUqq1yWN8IZ18o=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>
