@@ -321,6 +321,7 @@ namespace AstCTIClient
             string connStr = "Persist Security Info=False;" +
                      "database=" + this.optset.MySQLDatabase  + ";" +
                      "server=" + this.optset.MySQLHost + ";" +
+                     "Port=" + this.optset.MySQLPort.ToString() + ";" +
                      "user id=" + this.optset.MySQLUserName + ";" +
                      "Password=" + this.optset.MySQLPassword + ";" +
                      "Compress=false";

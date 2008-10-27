@@ -71,6 +71,9 @@
 8033=Minimizza all'avvio
 8034=Avvia con Windows
 
+8035=Prova
+8036=Risultato Connessione
+8037=Connessione Avvenuta!
 
 9000=Prova 1
 9001=Prova 2

@@ -71,5 +71,10 @@
 8033=Minimize on start
 8034=Start with Windows
 
+8035=Test
+8036=Connection Result
+8037=Connection successfull!
+
+
 9000=Test 1
 9001=Test 2

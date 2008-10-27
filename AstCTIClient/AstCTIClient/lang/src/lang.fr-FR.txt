@@ -1,75 +1,79 @@
 0001=Configuration
-0002=Réduire au minimum à plateau
-0003=Composez le numéro
-0004=Composez le numéro
-0005=Contexte de Numérotation
+0002=RÃ©duire au minimum Ã  plateau
+0003=Composez le numÃ©ro
+0004=Composez le numÃ©ro
+0005=Contexte de NumÃ©rotation
 0006=Quitter
 0007=Quitter l'application
-0008=Démarrer
-0009=Arrêter
-0010=Démarrer/Arrêter CTI Client
+0008=DÃ©marrer
+0009=ArrÃªter
+0010=DÃ©marrer/ArrÃªter CTI Client
 0011=Nom d'utilisateur
 0012=Secret
 0013=Show
 0014=Invalid pouvoirs
 0015=Invalid path application dans son Contexte
-0016=Insérer un numéro de téléphone à composer
-0017=Sélectionnez le contexte sortant s'il vous plaît!
+0016=InsÃ©rer un numÃ©ro de tÃ©lÃ©phone Ã  composer
+0017=SÃ©lectionnez le contexte sortant s'il vous plaÃ®t!
 
 0100=Situation ligne
 0101=Off Hook
 0102=Baguage
 0103=Sur le crochet
-0104=Connectés
+0104=ConnectÃ©s
 0105=Hangup
 
-0200=Nouvel appel à partir de:
+0200=Nouvel appel Ã  partir de:
 0201=Cliquez pour fermer
 
 0300=Aller
 
-7997=AsteriskCTI Settings
-7998=Cancel
-7999=Confirm
+7997=ParamÃ¨tres de AsteriskCTI
+7998=Annuler
+7999=Confirmer
 
 8000=Cti Server
 8001=Database
 8002=Contextes
-8003=Other
+8003=Autre
 
-8005=CTI Server' connection
-8006=Client Informations
-8007=Database Connection
+8005=Connexion au serveur CTI
+8006=Information sur le client
+8007=Database Connexion
 8008=
 8009=Inbound/Outbound Contextes
 8010=
-8011=Internal Browser
-8012=Other
+8011=Navigateur interne
+8012=Autre
 
 8013=Hostname or IP
 8014=TCP/IP Port
 8015=Socket Timeout (ms)
-8016=Asterisk Extension or Agent
-8017=Username
-8018=Password
-8019=Show Callerid Popup
+8016=Asterisk Extension ou Agent
+8017=Nom d'utilisateur
+8018=Mot de passe
+8019=Voir CallerId popup
 8020=Timeout (secs.)
-8021=Fadeout Speed
+8021=Fondu de vitesse
 
 8022=Hostname or IP
-8023=Username
-8024=Password
+8023=Nom d'utilisateur
+8024=Mot de passe
 8025=Port
 
-8026=Show Statusbar
-8027=Show Addressbar
-8028=Allow editing of URLs
-8029=Show "Go" Button
-8030=Close child windows on close
-8031=GUI Language
+8026=Afficher la barre d'Ã©tat
+8027=Voir la barre d'adresse
+8028=Autoriser la modification d'URL
+8029=Voir la "Aller" Button
+8030=Fermer les fenÃªtres enfant sur une Ã©troite
+8031=Langue d'interface graphique
 8032=Interface's Font
-8033=Minimize on start
-8034=Start with Windows
+8033=RÃ©duire au minimum le dÃ©but
+8034=DÃ©marrer avec Windows
+
+8035=Tester
+8036=RÃ©sultat de connexion
+8037=Connexion rÃ©ussie!
 
 9000=Test 1
 9001=Test 2

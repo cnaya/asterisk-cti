@@ -49,6 +49,9 @@ using System.Globalization;
 using System.Threading;
 using SettingsManager;
 using System.Collections;
+using MySql.Data;
+using MySql.Data.MySqlClient;
+using MySql.Data.Types;
 
 namespace AstCTIClient
 {
@@ -159,6 +162,7 @@ namespace AstCTIClient
 
             this.txtMysqlHost.Text = optset.MySQLHost;
             this.txtMysqlUser.Text = optset.MySQLUserName;
+            this.txtMysqlDatabase.Text = optset.MySQLDatabase;
             this.txtMysqlPassword.Text = optset.MySQLPassword;
             this.txtMysqlPort.Text = this.optset.MySQLPort.ToString();
             this.chkIBAddrBar.Checked = this.optset.ShowAddressBar;
@@ -211,6 +215,7 @@ namespace AstCTIClient
             optset.CalleridFadeSpeed = tmp;
 
             optset.MySQLHost = this.txtMysqlHost.Text;
+            optset.MySQLDatabase = this.txtMysqlDatabase.Text;
             optset.MySQLUserName = this.txtMysqlUser.Text;
             optset.MySQLPassword = this.txtMysqlPassword.Text;
             tmp = 0;
@@ -423,6 +428,30 @@ namespace AstCTIClient
             this.GetAppSettings();
             this.DialogResult = DialogResult.OK;
             this.Hide();
+        }
+
+        private void btnDbTest_Click(object sender, EventArgs e)
+        {
+            string connStr = "Persist Security Info=False;" +
+                     "database=" + this.txtMysqlDatabase.Text+ ";" +
+                     "server=" + this.txtMysqlHost.Text + ";" +
+                     "Port=" + this.txtMysqlPort.Text + ";" +
+                     "user id=" + this.txtMysqlUser.Text + ";" +
+                     "Password=" + this.txtMysqlPassword.Text + ";" +
+                     "Compress=false";
+            
+            
+            MySqlConnection cn = new MySqlConnection(connStr);
+            try
+            {
+                cn.Open();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            MessageBox.Show(this, frmSettings.RM.GetString("8037"), frmSettings.RM.GetString("8036"), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 
