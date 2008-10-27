@@ -41,6 +41,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.Serialization;
 using System.Xml;
+using System.Reflection;
+using System.Collections;
+
 
 namespace SettingsManager
 {
@@ -54,6 +57,7 @@ namespace SettingsManager
             set { saveOnClose = value; }
         }
 
+        
 
         #region "Implements IXmlSerializable"
         public System.Xml.Schema.XmlSchema GetSchema()

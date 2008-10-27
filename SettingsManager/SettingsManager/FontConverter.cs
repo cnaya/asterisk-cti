@@ -1,4 +1,4 @@
-// Copyright (C) 2007 Bruno Salzano
+// Copyright (C) 2008 Bruno Salzano
 // http://centralino-voip.brunosalzano.com
 //
 // This program is free software; you can redistribute it and/or modify
@@ -38,13 +38,19 @@
 
 
 using System;
+using System.Collections.Generic;
+using System.Text;
+using System.IO;
 using System.Drawing;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace SettingsManager
 {
-    // Thanks to: http://devblog.antongochev.net/2008/06/26/serializedeserialize-a-font-tofrom-xml/
+    /// <summary>
+    /// http://devblog.antongochev.net/2008/06/26/serializedeserialize-a-font-tofrom-xml/
+    /// </summary>
     public static class SMFontConverter
     {
         public static string ToBase64String(Font font)
@@ -73,7 +79,6 @@ namespace SettingsManager
             }
             catch { }
             return null;
-        }
+        }      
     }
-
 }
