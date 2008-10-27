@@ -158,17 +158,32 @@ namespace AstCTIClient
             this.FormSetFont();
             
         }
-
         void FormSetFont()
         {
-            Font interfaceFont = this.optset.InterfaceFont;
-              
+            Font f = this.optset.InterfaceFont;
             foreach (Control ctl in this.Controls)
             {
-                if (ctl.Name != "linkLabel1")
-                    ctl.Font = interfaceFont;
+                ctl.Font = f;
+                RecursiveSetFont(ctl, f);
             }
         }
+
+        void RecursiveSetFont(Control ctl, Font f)
+        {
+            foreach (Control cctl in ctl.Controls)
+            {
+                cctl.Font = f;
+
+                if (cctl.HasChildren)
+                {
+                    foreach (Control scctl in cctl.Controls)
+                    {
+                        RecursiveSetFont(scctl, f);
+                    }
+                }
+            }
+        }
+        
 
         void frmMain_Load(object sender, EventArgs e)
         {

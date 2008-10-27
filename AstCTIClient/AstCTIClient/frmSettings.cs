@@ -78,7 +78,9 @@ namespace AstCTIClient
             this.txtMysqlPort.LostFocus += new EventHandler(CheckNumericAndDefault);
             LoadLocales();
             LoadLanguageDirectory(strResourcesPath);
+            SetFont();
             GlobalizeApp();
+            
             this.SetAppSettings();
             
             
@@ -238,6 +240,7 @@ namespace AstCTIClient
             string[] locales = lang.LocaleValue.Split('-');
             LocaleImage(locales[1].ToLower());
             GlobalizeApp();
+
         }
 
         private void LocaleImage(string locale)
@@ -350,6 +353,32 @@ namespace AstCTIClient
 
         #endregion
 
+        void SetFont()
+        {
+            Font f = this.optset.InterfaceFont;
+            foreach (Control ctl in this.Controls)
+            {
+                ctl.Font = f;
+                RecursiveSetFont(ctl, f);
+            }
+        }
+
+        void RecursiveSetFont(Control ctl, Font f)
+        {
+            foreach (Control cctl in ctl.Controls)
+            {
+                cctl.Font = f;
+
+                if (cctl.HasChildren)
+                {
+                    foreach (Control scctl in cctl.Controls)
+                    {
+                        RecursiveSetFont(scctl, f);
+                    }
+                }
+            }
+        }
+
         private void btnUIFont_Click(object sender, EventArgs e)
         {
             fontDialog1.Font = this.optset.InterfaceFont;
@@ -359,7 +388,7 @@ namespace AstCTIClient
             {
                 this.optset.InterfaceFont = fontDialog1.Font;
                 this.txtUIFont.Text = this.optset.InterfaceFont.ToString();
-
+                SetFont();
             }
         }
 
