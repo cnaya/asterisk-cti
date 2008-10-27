@@ -114,10 +114,10 @@ namespace AstCTIClient
 
         private void UpdateInterfaceFromConfg()
         {
-            if (!this.optset.CanInsertUrls) this.cboAddressList.Enabled = false;
-            if (!this.optset.ShowAddressBar) this.toolStrip1.Visible = false;
-            if (!this.optset.ShowGoButton) this.btnGo.Visible = false;
-            if (!this.optset.ShowStatusBar) this.statusStrip1.Visible = false;
+            this.cboAddressList.Enabled = this.optset.CanInsertUrls;
+            this.toolStrip1.Visible = this.optset.ShowAddressBar;
+            this.btnGo.Visible = this.optset.ShowGoButton;
+            this.statusStrip1.Visible = this.optset.ShowStatusBar;
             UpdateComboWidth();
 
         }
@@ -125,7 +125,7 @@ namespace AstCTIClient
         private void UpdateComboWidth()
         {
             int btnGoWidth = (this.btnGo.Visible) ? this.btnGo.Width : 0;
-            this.cboAddressList.Width = toolStrip1.ClientRectangle.Width - btnGoWidth - 20;
+            this.cboAddressList.Width = toolStrip1.ClientRectangle.Width - btnGoWidth - 50;
         }
         #endregion
 

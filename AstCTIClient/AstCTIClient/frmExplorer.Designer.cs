@@ -80,6 +80,7 @@ namespace AstCTIClient
             // 
             // toolStrip1
             // 
+            this.toolStrip1.CanOverflow = false;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cboAddressList,
             this.btnGo});

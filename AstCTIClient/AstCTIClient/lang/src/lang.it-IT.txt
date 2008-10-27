@@ -28,5 +28,49 @@
 
 0300=Vai
 
+7997=Impostazioni AsteriskCTI
+7998=Annulla
+7999=Conferma
+
+8000=Cti Server
+8001=Database
+8002=Contesti
+8003=Altro
+
+8005=Connessione al CTI Server
+8006=Informazioni Client
+8007=Connessione al Database
+8008=
+8009=Contesti di Inbound
+8010=Contesti di Outbound
+8011=Browser Interno
+8012=Altro
+
+8013=Hostname o IP
+8014=Porta di connessione
+8015=Socket Timeout (ms)
+8016=Interno o agente asterisk
+8017=Nome utente
+8018=Password
+8019=Visualizza Popup Callerid
+8020=Timeout (sec.)
+8021=Velocità Fadeout
+
+8022=Hostname o IP
+8023=Nome utente
+8024=Password
+8025=Porta
+
+8026=Visualizza Statusbar
+8027=Visualizza Barra Indirizzi
+8028=Consenti Inserimento URLs
+8029=Visualizza Bottone Vai
+8030=Chiudi Finestre figlie
+8031=Lingua Interfaccia
+8032=Font Interfaccia
+8033=Minimizza all'avvio
+8034=Avvia con Windows
+
+
 9000=Prova 1
 9001=Prova 2

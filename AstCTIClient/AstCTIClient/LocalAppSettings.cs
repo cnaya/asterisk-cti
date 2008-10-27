@@ -48,7 +48,7 @@ using SettingsManager;
 
 namespace AstCTIClient
 {
-    public class LocalAppSettings : AppSettings 
+    public class LocalAppSettings : AppSettings
     {
         private string cti_host = "localhost";
         private int cti_port = 9000;
@@ -62,6 +62,7 @@ namespace AstCTIClient
         private string mysql_user = "root";
         private string mysql_pass = "";
         private string mysql_dbms = "test";
+        private int mysql_port = 3306;
 
         CTIContextCollection cticontextes = new CTIContextCollection();
         CTIOutboundContextCollection ctioutboundcontextes = new CTIOutboundContextCollection();
@@ -234,6 +235,13 @@ namespace AstCTIClient
         {
             get { return this.mysql_dbms; }
             set { this.mysql_dbms = value; }
+        }
+
+        [Category("DATABASE"), Description("MySQL Port")]
+        public int MySQLPort
+        {
+            get { return this.mysql_port; }
+            set { this.mysql_port = value; }
         }
 
         [Category("INTERFACE"), Description( "Language")]

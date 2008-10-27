@@ -28,5 +28,48 @@
 
 0300=Ir
 
+7997=Configuración de AsteriskCTI
+7998=Cancelar
+7999=Confirmar
+
+8000=Servidor Cti
+8001=Base de Datos
+8002=Contextos
+8003=Otro
+
+8005=Conexión de Servidor CTI
+8006=Informacion del Cliente
+8007=Conexión a basde de datos
+8008=
+8009=Contextos Entrantes
+8010=Contextos Salientes
+8011=Navegador Interno
+8012=Otro
+
+8013=Nombre de host o Direccion IP
+8014=Puerto TCP/IP
+8015=Tiempo de espera del Socket (ms)
+8016=Extensión o Agente de Asterisk
+8017=Usuario
+8018=Contraseña
+8019=Mostrar identificador de llamadas
+8020=Tiempo de espera (segs.)
+8021=Velocidad de desvanecimiento
+
+8022=Nombre de host o Direccion IP
+8023=Usuario
+8024=Contraseña
+8025=Puerto
+
+8026=Mostrar Barra de Estado
+8027=Mostrar Barra de Direcciones
+8028=Permitir modificar direcciones URL
+8029=Mostrar Boton "Ir"
+8030=Cerrar ventanas hijas al salir
+8031=Idioma del GUI
+8032=Fuente de la interfaz
+8033=Minimizar al Inicio
+8034=Iniciar con Windows
+
 9000=Prueba 1
 9001=Prueba 2

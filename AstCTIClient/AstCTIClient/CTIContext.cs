@@ -45,11 +45,12 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Drawing.Design;
 using SettingsManager;
+using System.Reflection;
 
 namespace AstCTIClient
 {
     [TypeConverter(typeof(CTIContextConverter))]
-    public class CTIContext
+    public class CTIContext : ICloneable
     {
         private bool use_internal_browser = false;
         private string context = "";
@@ -105,9 +106,25 @@ namespace AstCTIClient
         {
             return this.context;
         }
+
+        public object Clone()
+        {
+            //First we create an instance of this specific type.
+
+            CTIContext newObject = new CTIContext();
+            newObject.Context = this.context;
+            newObject.DisplayName = this.displayname;
+            newObject.Application = this.application;
+            newObject.Parameters= this.parameters;
+            newObject.InternalBrowser = this.use_internal_browser;
+            newObject.Enabled = this.enabled;
+            
+            
+            return newObject;
+        }
     }
 
-    public class CTIContextCollection : CollectionBase, ICustomTypeDescriptor
+    public class CTIContextCollection : CollectionBase, ICustomTypeDescriptor, ICloneable
     {
         #region collection impl
 
@@ -232,6 +249,21 @@ namespace AstCTIClient
         }
 
         #endregion
+
+        public object Clone()
+        {
+            //First we create an instance of this specific type.
+
+            CTIContextCollection newObject = new CTIContextCollection();
+
+            for (int i = 0; i < this.Count; i++)
+            {
+                newObject.Add((CTIContext)this[i].Clone());
+            }
+
+            return newObject;
+        }
+
     }
 
     public class CTIContextCollectionPropertyDescriptor : PropertyDescriptor

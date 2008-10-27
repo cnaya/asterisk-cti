@@ -28,5 +28,48 @@
 
 0300=идти
 
+7997=AsteriskCTI Settings
+7998=Cancel
+7999=Confirm
+
+8000=Cti Server
+8001=Database
+8002=Contextes
+8003=Other
+
+8005=CTI Server' connection
+8006=Client Informations
+8007=Database Connection
+8008=
+8009=Inbound/Outbound Contextes
+8010=
+8011=Internal Browser
+8012=Other
+
+8013=Hostname or IP
+8014=TCP/IP Port
+8015=Socket Timeout (ms)
+8016=Asterisk Extension or Agent
+8017=Username
+8018=Password
+8019=Show Callerid Popup
+8020=Timeout (secs.)
+8021=Fadeout Speed
+
+8022=Hostname or IP
+8023=Username
+8024=Password
+8025=Port
+
+8026=Show Statusbar
+8027=Show Addressbar
+8028=Allow editing of URLs
+8029=Show "Go" Button
+8030=Close child windows on close
+8031=GUI Language
+8032=Interface's Font
+8033=Minimize on start
+8034=Start with Windows
+
 9000=проверка 1
 9001=проверка 2

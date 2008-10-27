@@ -45,11 +45,12 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Drawing.Design;
 using SettingsManager;
+using System.Reflection;
 
 namespace AstCTIClient
 {
     [TypeConverter(typeof(CTIOutboundContextConverter))]
-    public class CTIOutboundContext
+    public class CTIOutboundContext : ICloneable
     {
         private string context = "";
         private int priority = 1;
@@ -91,9 +92,21 @@ namespace AstCTIClient
         {
             return this.context;
         }
+
+        public object Clone()
+        {
+            //First we create an instance of this specific type.
+
+            CTIOutboundContext newObject = new CTIOutboundContext();
+            newObject.Context = this.context;
+            newObject.DisplayName = this.displayname;
+            newObject.Priority = this.priority;
+            
+            return newObject;
+        }
     }
 
-    public class CTIOutboundContextCollection : CollectionBase, ICustomTypeDescriptor
+    public class CTIOutboundContextCollection : CollectionBase, ICustomTypeDescriptor, ICloneable
     {
         #region collection impl
 
@@ -218,6 +231,21 @@ namespace AstCTIClient
         }
 
         #endregion
+
+        public object Clone()
+        {
+            //First we create an instance of this specific type.
+
+            CTIOutboundContextCollection newObject = new CTIOutboundContextCollection();
+
+
+            for (int i = 0; i < this.Count; i++)
+            {
+                newObject.Add((CTIOutboundContext)this[i].Clone());
+            }
+            return newObject;
+        }
+
     }
 
     public class CTIOutboundContextCollectionPropertyDescriptor : PropertyDescriptor

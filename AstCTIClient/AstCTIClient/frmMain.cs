@@ -76,8 +76,6 @@ namespace AstCTIClient
         private string strCulture = "en-US";
         private static ResourceManager rm;
 
-        private bool bHideConfiguration = false;
-
         private SettingsManager.SettingsManager sm;
         private LocalAppSettings optset = null;
         //const and dll functions for moving form
@@ -167,7 +165,8 @@ namespace AstCTIClient
               
             foreach (Control ctl in this.Controls)
             {
-                ctl.Font = interfaceFont;
+                if (ctl.Name != "linkLabel1")
+                    ctl.Font = interfaceFont;
             }
         }
 
@@ -416,7 +415,8 @@ namespace AstCTIClient
 
         private void btnStartStop_Click(object sender, EventArgs e)
         {
-            if (btnStartStop.Text.Equals(frmMain.RM.GetString("0008")))
+            string chk = frmMain.RM.GetString("0008");
+            if (btnStartStop.Text == chk)
             {
                 CheckRegistrySettings();
                 btnStartStop.Enabled = false;
@@ -541,10 +541,11 @@ namespace AstCTIClient
                         switch (this.protocolStatus)
                         {
                             case PROTOCOL_STATES.SENDED_PASSWORD:
+                                string stopString = frmMain.RM.GetString("0009");
                                 this.protocolStatus = PROTOCOL_STATES.LOGGED_IN;
                                 if (this.InvokeRequired)
                                 {
-                                    Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Text", frmMain.RM.GetString("0009") });
+                                    Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Text", stopString });
                                     Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Enabled", true });
                                     Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnConfig, "Enabled", false });
                                     Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)lblLineState, "Text", "" });
@@ -556,7 +557,7 @@ namespace AstCTIClient
                                 }
                                 else
                                 {
-                                    this.btnStartStop.Text = frmMain.RM.GetString("0009");
+                                    this.btnStartStop.Text = stopString;
                                     this.btnStartStop.Enabled = true;
                                     this.btnConfig.Enabled = false;
                                     this.DoFormHide();
@@ -571,14 +572,17 @@ namespace AstCTIClient
 
         void socketmanager_DataArrival(object sender, string data)
         {
+            SetCulture();
             this.parser.Parse(data);
         }
 
         void socketmanager_Disconnected(object sender)
         {
+            SetCulture();
+            string startString = frmMain.RM.GetString("0008");
             if (this.InvokeRequired)
             {
-                Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Text", frmMain.RM.GetString("0008") });
+                Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Text", startString });
                 Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Enabled", true });
                 Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnConfig, "Enabled", true });
                 Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)pnlExtension, "Visible", false});
@@ -587,7 +591,7 @@ namespace AstCTIClient
             }
             else
             {
-                this.btnStartStop.Text = frmMain.RM.GetString("0008");
+                this.btnStartStop.Text = startString;
                 this.btnStartStop.Enabled = true;
                 this.btnConfig.Enabled = true;
                 this.pnlExtension.Visible = false;
@@ -738,12 +742,17 @@ namespace AstCTIClient
 
         private void btnConfig_Click(object sender, EventArgs e)
         {
-
-            sm.EditConfig("Application Settings");
             try
             {
+
+                frmSettings frm = new frmSettings(this.optset);
+                DialogResult res = frm.ShowDialog(this);
+                sm.AppSettingsObject = frm.Settings;
+                sm.WriteConfig();
                 sm.ReadConfig();
-                optset = (LocalAppSettings)sm.AppSettingsObject;
+                this.optset = (LocalAppSettings)sm.AppSettingsObject;
+                frm.Dispose();
+
                 this.txtUsername.Text = optset.Username;
                 this.txtPassword.Text = optset.Password;
                 this.lblExtension.Text = optset.PhoneExt;
@@ -757,7 +766,6 @@ namespace AstCTIClient
                 {
                     this.noOpTimer.Interval = this.optset.SocketTimeout;
                 }
-
                 // this should refresh the socketmanager
                 if (this.socketmanager != null)
                 {
@@ -919,6 +927,6 @@ namespace AstCTIClient
 
         #endregion
 
-        
+       
     }
 }
