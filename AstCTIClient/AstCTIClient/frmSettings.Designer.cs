@@ -104,13 +104,13 @@ namespace AstCTIClient
             this.propInbound = new System.Windows.Forms.PropertyGrid();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.chkStartWithWindows = new System.Windows.Forms.CheckBox();
             this.chkMinimizeOnStart = new System.Windows.Forms.CheckBox();
             this.btnUIFont = new System.Windows.Forms.Button();
             this.txtUIFont = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
-            this.cbLanguage = new System.Windows.Forms.ComboBox();
+            this.cbLanguage = new System.Windows.Forms.ImageCombo();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.label14 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.chkIBCloseChilds = new System.Windows.Forms.CheckBox();
@@ -122,7 +122,6 @@ namespace AstCTIClient
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnConfirm = new System.Windows.Forms.Button();
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -133,7 +132,6 @@ namespace AstCTIClient
             this.groupBox4.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.groupBox7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox6.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -540,7 +538,6 @@ namespace AstCTIClient
             this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox7.Controls.Add(this.pictureBox1);
             this.groupBox7.Controls.Add(this.chkStartWithWindows);
             this.groupBox7.Controls.Add(this.chkMinimizeOnStart);
             this.groupBox7.Controls.Add(this.btnUIFont);
@@ -556,14 +553,6 @@ namespace AstCTIClient
             this.groupBox7.TabStop = false;
             this.groupBox7.Tag = "8012";
             this.groupBox7.Text = "Altro";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(415, 22);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(36, 21);
-            this.pictureBox1.TabIndex = 10;
-            this.pictureBox1.TabStop = false;
             // 
             // chkStartWithWindows
             // 
@@ -624,135 +613,16 @@ namespace AstCTIClient
             // 
             // cbLanguage
             // 
+            this.cbLanguage.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cbLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbLanguage.FormattingEnabled = true;
+            this.cbLanguage.ImageList = this.imageList1;
             this.cbLanguage.ItemHeight = 13;
             this.cbLanguage.Location = new System.Drawing.Point(211, 22);
             this.cbLanguage.Name = "cbLanguage";
-            this.cbLanguage.Size = new System.Drawing.Size(198, 21);
+            this.cbLanguage.Size = new System.Drawing.Size(198, 19);
             this.cbLanguage.TabIndex = 4;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(6, 26);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(92, 13);
-            this.label14.TabIndex = 2;
-            this.label14.Tag = "8031";
-            this.label14.Text = "Lingua Interfaccia";
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox6.Controls.Add(this.chkIBCloseChilds);
-            this.groupBox6.Controls.Add(this.chkIBShowGo);
-            this.groupBox6.Controls.Add(this.chkIBAllowUrls);
-            this.groupBox6.Controls.Add(this.chkIBAddrBar);
-            this.groupBox6.Controls.Add(this.chkIBStatusBar);
-            this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox6.Location = new System.Drawing.Point(4, 4);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(473, 87);
-            this.groupBox6.TabIndex = 2;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Tag = "8011";
-            this.groupBox6.Text = "Browser Interno";
-            // 
-            // chkIBCloseChilds
-            // 
-            this.chkIBCloseChilds.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkIBCloseChilds.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkIBCloseChilds.Location = new System.Drawing.Point(6, 65);
-            this.chkIBCloseChilds.Name = "chkIBCloseChilds";
-            this.chkIBCloseChilds.Size = new System.Drawing.Size(163, 17);
-            this.chkIBCloseChilds.TabIndex = 5;
-            this.chkIBCloseChilds.Tag = "8030";
-            this.chkIBCloseChilds.Text = "Chiudi Finestre figlie";
-            this.chkIBCloseChilds.UseVisualStyleBackColor = true;
-            // 
-            // chkIBShowGo
-            // 
-            this.chkIBShowGo.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkIBShowGo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkIBShowGo.Location = new System.Drawing.Point(186, 42);
-            this.chkIBShowGo.Name = "chkIBShowGo";
-            this.chkIBShowGo.Size = new System.Drawing.Size(163, 17);
-            this.chkIBShowGo.TabIndex = 4;
-            this.chkIBShowGo.Tag = "8029";
-            this.chkIBShowGo.Text = "Visualizza Bottone Vai";
-            this.chkIBShowGo.UseVisualStyleBackColor = true;
-            // 
-            // chkIBAllowUrls
-            // 
-            this.chkIBAllowUrls.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkIBAllowUrls.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkIBAllowUrls.Location = new System.Drawing.Point(186, 19);
-            this.chkIBAllowUrls.Name = "chkIBAllowUrls";
-            this.chkIBAllowUrls.Size = new System.Drawing.Size(163, 17);
-            this.chkIBAllowUrls.TabIndex = 3;
-            this.chkIBAllowUrls.Tag = "8028";
-            this.chkIBAllowUrls.Text = "Consenti Inserimento URLs";
-            this.chkIBAllowUrls.UseVisualStyleBackColor = true;
-            // 
-            // chkIBAddrBar
-            // 
-            this.chkIBAddrBar.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkIBAddrBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkIBAddrBar.Location = new System.Drawing.Point(6, 42);
-            this.chkIBAddrBar.Name = "chkIBAddrBar";
-            this.chkIBAddrBar.Size = new System.Drawing.Size(163, 17);
-            this.chkIBAddrBar.TabIndex = 2;
-            this.chkIBAddrBar.Tag = "8027";
-            this.chkIBAddrBar.Text = "Visualizza Barra Indirizzi";
-            this.chkIBAddrBar.UseVisualStyleBackColor = true;
-            // 
-            // chkIBStatusBar
-            // 
-            this.chkIBStatusBar.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkIBStatusBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkIBStatusBar.Location = new System.Drawing.Point(6, 19);
-            this.chkIBStatusBar.Name = "chkIBStatusBar";
-            this.chkIBStatusBar.Size = new System.Drawing.Size(163, 17);
-            this.chkIBStatusBar.TabIndex = 1;
-            this.chkIBStatusBar.Tag = "8026";
-            this.chkIBStatusBar.Text = "Visualizza Statusbar";
-            this.chkIBStatusBar.UseVisualStyleBackColor = true;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.btnCancel);
-            this.panel1.Controls.Add(this.btnConfirm);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 346);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(491, 50);
-            this.panel1.TabIndex = 1;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Location = new System.Drawing.Point(259, 15);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(98, 23);
-            this.btnCancel.TabIndex = 1;
-            this.btnCancel.Tag = "7998";
-            this.btnCancel.Text = "Annulla";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // btnConfirm
-            // 
-            this.btnConfirm.Location = new System.Drawing.Point(382, 15);
-            this.btnConfirm.Name = "btnConfirm";
-            this.btnConfirm.Size = new System.Drawing.Size(98, 23);
-            this.btnConfirm.TabIndex = 0;
-            this.btnConfirm.Tag = "7999";
-            this.btnConfirm.Text = "Conferma";
-            this.btnConfirm.UseVisualStyleBackColor = true;
-            this.btnConfirm.Click += new System.EventHandler(this.btnConfirm_Click);
             // 
             // imageList1
             // 
@@ -1006,6 +876,127 @@ namespace AstCTIClient
             this.imageList1.Images.SetKeyName(245, "zm.png");
             this.imageList1.Images.SetKeyName(246, "zw.png");
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(6, 26);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(92, 13);
+            this.label14.TabIndex = 2;
+            this.label14.Tag = "8031";
+            this.label14.Text = "Lingua Interfaccia";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox6.Controls.Add(this.chkIBCloseChilds);
+            this.groupBox6.Controls.Add(this.chkIBShowGo);
+            this.groupBox6.Controls.Add(this.chkIBAllowUrls);
+            this.groupBox6.Controls.Add(this.chkIBAddrBar);
+            this.groupBox6.Controls.Add(this.chkIBStatusBar);
+            this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox6.Location = new System.Drawing.Point(4, 4);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(473, 87);
+            this.groupBox6.TabIndex = 2;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Tag = "8011";
+            this.groupBox6.Text = "Browser Interno";
+            // 
+            // chkIBCloseChilds
+            // 
+            this.chkIBCloseChilds.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkIBCloseChilds.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkIBCloseChilds.Location = new System.Drawing.Point(6, 65);
+            this.chkIBCloseChilds.Name = "chkIBCloseChilds";
+            this.chkIBCloseChilds.Size = new System.Drawing.Size(163, 17);
+            this.chkIBCloseChilds.TabIndex = 5;
+            this.chkIBCloseChilds.Tag = "8030";
+            this.chkIBCloseChilds.Text = "Chiudi Finestre figlie";
+            this.chkIBCloseChilds.UseVisualStyleBackColor = true;
+            // 
+            // chkIBShowGo
+            // 
+            this.chkIBShowGo.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkIBShowGo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkIBShowGo.Location = new System.Drawing.Point(186, 42);
+            this.chkIBShowGo.Name = "chkIBShowGo";
+            this.chkIBShowGo.Size = new System.Drawing.Size(163, 17);
+            this.chkIBShowGo.TabIndex = 4;
+            this.chkIBShowGo.Tag = "8029";
+            this.chkIBShowGo.Text = "Visualizza Bottone Vai";
+            this.chkIBShowGo.UseVisualStyleBackColor = true;
+            // 
+            // chkIBAllowUrls
+            // 
+            this.chkIBAllowUrls.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkIBAllowUrls.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkIBAllowUrls.Location = new System.Drawing.Point(186, 19);
+            this.chkIBAllowUrls.Name = "chkIBAllowUrls";
+            this.chkIBAllowUrls.Size = new System.Drawing.Size(163, 17);
+            this.chkIBAllowUrls.TabIndex = 3;
+            this.chkIBAllowUrls.Tag = "8028";
+            this.chkIBAllowUrls.Text = "Consenti Inserimento URLs";
+            this.chkIBAllowUrls.UseVisualStyleBackColor = true;
+            // 
+            // chkIBAddrBar
+            // 
+            this.chkIBAddrBar.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkIBAddrBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkIBAddrBar.Location = new System.Drawing.Point(6, 42);
+            this.chkIBAddrBar.Name = "chkIBAddrBar";
+            this.chkIBAddrBar.Size = new System.Drawing.Size(163, 17);
+            this.chkIBAddrBar.TabIndex = 2;
+            this.chkIBAddrBar.Tag = "8027";
+            this.chkIBAddrBar.Text = "Visualizza Barra Indirizzi";
+            this.chkIBAddrBar.UseVisualStyleBackColor = true;
+            // 
+            // chkIBStatusBar
+            // 
+            this.chkIBStatusBar.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkIBStatusBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkIBStatusBar.Location = new System.Drawing.Point(6, 19);
+            this.chkIBStatusBar.Name = "chkIBStatusBar";
+            this.chkIBStatusBar.Size = new System.Drawing.Size(163, 17);
+            this.chkIBStatusBar.TabIndex = 1;
+            this.chkIBStatusBar.Tag = "8026";
+            this.chkIBStatusBar.Text = "Visualizza Statusbar";
+            this.chkIBStatusBar.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.btnCancel);
+            this.panel1.Controls.Add(this.btnConfirm);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 346);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(491, 50);
+            this.panel1.TabIndex = 1;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Location = new System.Drawing.Point(259, 15);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(98, 23);
+            this.btnCancel.TabIndex = 1;
+            this.btnCancel.Tag = "7998";
+            this.btnCancel.Text = "Annulla";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnConfirm
+            // 
+            this.btnConfirm.Location = new System.Drawing.Point(382, 15);
+            this.btnConfirm.Name = "btnConfirm";
+            this.btnConfirm.Size = new System.Drawing.Size(98, 23);
+            this.btnConfirm.TabIndex = 0;
+            this.btnConfirm.Tag = "7999";
+            this.btnConfirm.Text = "Conferma";
+            this.btnConfirm.UseVisualStyleBackColor = true;
+            this.btnConfirm.Click += new System.EventHandler(this.btnConfirm_Click);
+            // 
             // frmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1032,7 +1023,6 @@ namespace AstCTIClient
             this.tabPage4.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox6.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -1086,7 +1076,7 @@ namespace AstCTIClient
         private System.Windows.Forms.Button btnUIFont;
         private System.Windows.Forms.TextBox txtUIFont;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.ComboBox cbLanguage;
+        private System.Windows.Forms.ImageCombo  cbLanguage;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.CheckBox chkStartWithWindows;
         private System.Windows.Forms.CheckBox chkMinimizeOnStart;
@@ -1095,6 +1085,5 @@ namespace AstCTIClient
         private System.Windows.Forms.PropertyGrid propInbound;
         private System.Windows.Forms.FontDialog fontDialog1;
         private System.Windows.Forms.ImageList imageList1;
-        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

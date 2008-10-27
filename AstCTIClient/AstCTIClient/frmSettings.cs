@@ -235,20 +235,17 @@ namespace AstCTIClient
 
         void cbLanguage_SelectedValueChanged(object sender, EventArgs e)
         {
-            LocaleItem lang = (LocaleItem)this.cbLanguage.SelectedItem;
+            ImageComboItem itm = (ImageComboItem)this.cbLanguage.SelectedItem;
+            LocaleItem lang = (LocaleItem)itm.Tag;
+           
             optset.Language = lang.LocaleValue;
-            string[] locales = lang.LocaleValue.Split('-');
-            LocaleImage(locales[1].ToLower());
+            
+            
             GlobalizeApp();
 
         }
 
-        private void LocaleImage(string locale)
-        {
-            Image img = imageList1.Images[(string)locale+ ".png"];
-            if (img != null) this.pictureBox1.Image = img;
-            else this.pictureBox1.Image = null;
-        }
+        
 
         private void LoadLanguageDirectory(string path)
         {
@@ -269,23 +266,32 @@ namespace AstCTIClient
                 
                 string locale_name = (string)locales[args];
                 LocaleItem itm = new LocaleItem(locale_name, args);
-                int pos = cbLanguage.Items.Add(itm);
+                ImageComboItem cbitm = new ImageComboItem(itm.LocaleName, LocaleImageIndex(args));
+                cbitm.Tag = itm;
+                int pos = cbLanguage.Items.Add(cbitm);
                 
 
             }
 
             for (i = 0; i < cbLanguage.Items.Count; i++)
             {
-                if ( ((LocaleItem)cbLanguage.Items[i]).LocaleValue == optset.Language)
+                ImageComboItem itm =(ImageComboItem)cbLanguage.Items[i]; 
+                LocaleItem litm = (LocaleItem)itm.Tag;
+                if ( litm.LocaleValue == optset.Language)
                 {
-                    string[] locales = optset.Language.Split('-');
-                    LocaleImage(locales[1].ToLower());
                     cbLanguage.SelectedIndex = i;
                     startupLanguageIdx = i;
                     break;
                 }
 
             }
+        }
+
+        private int LocaleImageIndex(string locale)
+        {
+            string[] locales = locale.Split('-');
+
+            return imageList1.Images.IndexOfKey(locales[1].ToLower() + ".png");
         }
 
         #region Localization Action
