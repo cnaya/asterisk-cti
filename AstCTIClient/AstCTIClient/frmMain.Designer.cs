@@ -104,12 +104,13 @@ namespace AstCTIClient
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuShowHide});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(104, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 48);
             // 
             // mnuShowHide
             // 
             this.mnuShowHide.Name = "mnuShowHide";
-            this.mnuShowHide.Size = new System.Drawing.Size(103, 22);
+            this.mnuShowHide.Size = new System.Drawing.Size(152, 22);
+            this.mnuShowHide.Tag = "0013";
             this.mnuShowHide.Text = "Show";
             this.mnuShowHide.Click += new System.EventHandler(this.mnuShowHide_Click);
             // 
@@ -150,6 +151,7 @@ namespace AstCTIClient
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(97, 23);
             this.btnStartStop.TabIndex = 0;
+            this.btnStartStop.Tag = "0008";
             this.btnStartStop.Text = "Start";
             this.toolTip1.SetToolTip(this.btnStartStop, "Starts/Stops CTI Client");
             this.btnStartStop.UseVisualStyleBackColor = true;
@@ -162,6 +164,7 @@ namespace AstCTIClient
             this.btnQuit.Name = "btnQuit";
             this.btnQuit.Size = new System.Drawing.Size(97, 23);
             this.btnQuit.TabIndex = 3;
+            this.btnQuit.Tag = "0006";
             this.btnQuit.Text = "Quit";
             this.toolTip1.SetToolTip(this.btnQuit, "Quit Application");
             this.btnQuit.UseVisualStyleBackColor = true;
@@ -189,6 +192,7 @@ namespace AstCTIClient
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.Size = new System.Drawing.Size(57, 13);
             this.lblUserName.TabIndex = 5;
+            this.lblUserName.Tag = "0011";
             this.lblUserName.Text = "UserName";
             // 
             // txtUsername
@@ -214,6 +218,7 @@ namespace AstCTIClient
             this.lblSecret.Name = "lblSecret";
             this.lblSecret.Size = new System.Drawing.Size(38, 13);
             this.lblSecret.TabIndex = 7;
+            this.lblSecret.Tag = "0012";
             this.lblSecret.Text = "Secret";
             // 
             // pnlExtension
@@ -237,6 +242,7 @@ namespace AstCTIClient
             this.lblLineState.Name = "lblLineState";
             this.lblLineState.Size = new System.Drawing.Size(218, 23);
             this.lblLineState.TabIndex = 4;
+            this.lblLineState.Tag = "0100";
             this.lblLineState.Text = "Line Status";
             this.lblLineState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 

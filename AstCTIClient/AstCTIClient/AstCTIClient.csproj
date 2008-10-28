@@ -86,6 +86,7 @@
     </Compile>
     <Compile Include="ImageComboItem.cs" />
     <Compile Include="LocalAppSettings.cs" />
+    <Compile Include="Localizator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frmCallerId.resx">

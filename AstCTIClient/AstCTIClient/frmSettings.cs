@@ -61,9 +61,7 @@ namespace AstCTIClient
         private LocalAppSettings initial_optset;
         private int startupLanguageIdx = 0;
         private static ResourceManager rm;
-        private string strCulture = "en-US";
-        private string strResourcesPath = Application.StartupPath + Path.DirectorySeparatorChar + "lang";
-
+        private Localizator localizator;
         private InOutContext inoutcontextes;
         private InOutContext initial_inoutcontextes;
 
@@ -79,10 +77,13 @@ namespace AstCTIClient
             this.txtCalleridTimeout.LostFocus += new EventHandler(CheckNumericAndDefault);
             this.txtCalleridFadeoutSpeed.LostFocus += new EventHandler(CheckNumericAndDefault);
             this.txtMysqlPort.LostFocus += new EventHandler(CheckNumericAndDefault);
+            this.localizator = new Localizator();
+            this.localizator.Culture = this.optset.Language;
+            this.localizator.Localize(this);
             LoadLocales();
-            LoadLanguageDirectory(strResourcesPath);
+            LoadLanguageDirectory(this.localizator.ResourcePath);
             SetFont();
-            GlobalizeApp();
+            
             
             this.SetAppSettings();
             
@@ -112,7 +113,7 @@ namespace AstCTIClient
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(this, "Error loading locales", "Error", MessageBoxButtons.OK);
+                        MessageBox.Show(this, "Error loading locales:\n"+ex.Message, "Error", MessageBoxButtons.OK);
                     }
                 }
                 lstream.Close();
@@ -244,9 +245,8 @@ namespace AstCTIClient
             LocaleItem lang = (LocaleItem)itm.Tag;
            
             optset.Language = lang.LocaleValue;
-            
-            
-            GlobalizeApp();
+            this.localizator.Culture = optset.Language;
+            this.localizator.Localize(this);
 
         }
 
@@ -299,70 +299,7 @@ namespace AstCTIClient
             return imageList1.Images.IndexOfKey(locales[1].ToLower() + ".png");
         }
 
-        #region Localization Action
-
-        public static ResourceManager RM
-        {
-            get
-            {
-                return rm;
-            }
-        }
-
-        private void GlobalizeApp()
-        {
-            SetCulture();
-            SetResource();
-            SetUIChanges();
-        }
-
-        private void SetCulture()
-        {
-            if (optset.Language != "")
-                strCulture = optset.Language;
-
-            CultureInfo objCI = new CultureInfo(strCulture);
-            Thread.CurrentThread.CurrentCulture = objCI;
-            Thread.CurrentThread.CurrentUICulture = objCI;
-
-        }
-        private void SetResource()
-        {
-            rm = ResourceManager.CreateFileBasedResourceManager
-                ("lang", strResourcesPath, null);
-        }
-
-        private void SetUIChanges()
-        {
-            this.Text = frmSettings.RM.GetString("7997");
-            foreach (Control ctl in this.Controls)
-            {
-                RecursiveLocalize(ctl);
-            }
-            
-        }
-
-        private void RecursiveLocalize(Control cctl)
-        {
-            if (cctl.Tag != null)
-            {
-                string code = (string)cctl.Tag;
-                if (code != "")
-                {
-                    cctl.Text = frmSettings.RM.GetString(code);
-                }
-            }
-            if (cctl.HasChildren)
-            {
-                foreach (Control scctl in cctl.Controls)
-                {
-                    RecursiveLocalize(scctl);
-                }
-            }
-            
-        }
-
-        #endregion
+        
 
         void SetFont()
         {
@@ -451,7 +388,7 @@ namespace AstCTIClient
                 MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            MessageBox.Show(this, frmSettings.RM.GetString("8037"), frmSettings.RM.GetString("8036"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, this.localizator["8037"], this.localizator["8036"], MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 

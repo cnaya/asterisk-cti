@@ -72,9 +72,7 @@ namespace AstCTIClient
         private PROTOCOL_STATES protocolStatus;
         private System.Windows.Forms.Timer noOpTimer = null;
 
-        private string strResourcesPath = Application.StartupPath + Path.DirectorySeparatorChar + "lang";
-        private string strCulture = "en-US";
-        private static ResourceManager rm;
+        private Localizator localizator;
 
         private SettingsManager.SettingsManager sm;
         private LocalAppSettings optset = null;
@@ -109,15 +107,11 @@ namespace AstCTIClient
             this.txtUsername.LostFocus += new EventHandler(txtUsername_LostFocus);
             this.txtPhoneNumber.TextChanged += new EventHandler(txtPhoneNumber_TextChanged);
             this.cboOutboundContextes.SelectedIndexChanged += new EventHandler(cboOutboundContextes_SelectedIndexChanged);
-            this.Load += new EventHandler(frmMain_Load);
             this.socketmanager = null;
             this.parser = null;
             this.protocolStatus = PROTOCOL_STATES.STATUS_UNKNOWN;
             this.lblLineState.Text = "";
             sm = new SettingsManager.SettingsManager();
-
-            
-
             this.CheckRegistrySettings();
 
             try
@@ -155,6 +149,12 @@ namespace AstCTIClient
                 
                 MessageBox.Show(ex.ToString());
             }
+
+            this.localizator = new Localizator();
+            this.localizator.Culture = this.optset.Language;
+            this.localizator.Localize(this);
+            UpdateTooltips();
+
             this.FormSetFont();
             
         }
@@ -184,12 +184,6 @@ namespace AstCTIClient
             }
         }
         
-
-        void frmMain_Load(object sender, EventArgs e)
-        {
-            GlobalizeApp();            
-        }
-
         /// <summary>
         /// This function checks registry settings bHideConfiguration and bOnlyCti
         /// to see if the software should hide configuration button and/or hide
@@ -431,7 +425,7 @@ namespace AstCTIClient
 
         private void btnStartStop_Click(object sender, EventArgs e)
         {
-            string chk = frmMain.RM.GetString("0008");
+            string chk = this.localizator["0008"];
             if (btnStartStop.Text == chk)
             {
                 CheckRegistrySettings();
@@ -473,13 +467,13 @@ namespace AstCTIClient
                                 switch (state)
                                 {
                                     case "Up":
-                                        state = frmMain.RM.GetString("0101"); // "Off Hook";
+                                        state = this.localizator["0101"]; // "Off Hook";
                                         break;
                                     case "Ringing":
-                                        state = frmMain.RM.GetString("0102");  // "Ringing";
+                                        state = this.localizator["0102"];  // "Ringing";
                                         break;
                                     case "Down":
-                                        state = frmMain.RM.GetString("0103");  //"On Hook";
+                                        state = this.localizator["0103"];  //"On Hook";
                                         break;
                                 }
                             }
@@ -512,12 +506,12 @@ namespace AstCTIClient
                                     }
                                 }
                             }
-                            state = frmMain.RM.GetString("0104"); // "Connected"
+                            state = this.localizator["0104"]; // "Connected"
                             Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)lblLineState, "Text", state });
                             if (tostart != null) ExecCTIApplication(tostart,call);
                             break;
                         case "Hangup":
-                            state = frmMain.RM.GetString("0105"); // "Hangup"
+                            state = this.localizator["0105"]; // "Hangup"
                             Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)lblLineState, "Text", state });
                             EnableCallActions(true);
                             break;
@@ -550,14 +544,14 @@ namespace AstCTIClient
                         {
                             this.socketmanager.SendData("QUIT");
                             this.socketmanager.Disconnect();
-                            MessageBox.Show(frmMain.RM.GetString("0014")); // "Invalid credentials"
+                            MessageBox.Show(this.localizator["0014"]); // "Invalid credentials"
                         }
                         break;
                     case 102:
                         switch (this.protocolStatus)
                         {
                             case PROTOCOL_STATES.SENDED_PASSWORD:
-                                string stopString = frmMain.RM.GetString("0009");
+                                string stopString = this.localizator["0009"];
                                 this.protocolStatus = PROTOCOL_STATES.LOGGED_IN;
                                 if (this.InvokeRequired)
                                 {
@@ -588,14 +582,14 @@ namespace AstCTIClient
 
         void socketmanager_DataArrival(object sender, string data)
         {
-            SetCulture();
+            this.localizator.Culture = this.optset.Language;
             this.parser.Parse(data);
         }
 
         void socketmanager_Disconnected(object sender)
         {
-            SetCulture();
-            string startString = frmMain.RM.GetString("0008");
+            this.localizator.Culture = this.optset.Language;
+            string startString = this.localizator["0008"];
             if (this.InvokeRequired)
             {
                 Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)btnStartStop, "Text", startString });
@@ -643,7 +637,7 @@ namespace AstCTIClient
             if ( (!ctx.InternalBrowser) & (!File.Exists(ctx.Application)) )
             {
                 GenericStringAction scf = new GenericStringAction(this.MessageBoxShow);
-                scf.Invoke(string.Format("{0} {1}", frmMain.RM.GetString("0015"), ctx.DisplayName));
+                scf.Invoke(string.Format("{0} {1}", this.localizator["0015"], ctx.DisplayName));
                 return;
             }
             string parameters = ctx.Parameters;
@@ -768,14 +762,16 @@ namespace AstCTIClient
                 sm.ReadConfig();
                 this.optset = (LocalAppSettings)sm.AppSettingsObject;
                 frm.Dispose();
-
+                this.BringToFront();
                 this.txtUsername.Text = optset.Username;
                 this.txtPassword.Text = optset.Password;
                 this.lblExtension.Text = optset.PhoneExt;
 
                 this.UpdateOutboundContextes();
 
-                this.GlobalizeApp();
+                this.localizator.Culture = this.optset.Language;
+                this.localizator.Localize(this);
+                UpdateTooltips();
                 this.FormSetFont();
 
                 if (this.noOpTimer != null)
@@ -823,11 +819,11 @@ namespace AstCTIClient
         {
             if (this.txtPhoneNumber.Text.Equals(""))
             {
-                MessageBox.Show(this, frmMain.RM.GetString("0016"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, this.localizator["0016"], "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;                
             }
             if (this.cboOutboundContextes.SelectedItem == null) {
-                MessageBox.Show(this, frmMain.RM.GetString("0017"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, this.localizator["0017"], "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             CTIOutboundContext ctx = (CTIOutboundContext)this.cboOutboundContextes.SelectedItem;
@@ -888,57 +884,18 @@ namespace AstCTIClient
         }
 
         #region Localization Action
-
-        public static ResourceManager RM
-        {
-            get
-            {
-                return rm;
-            }
-        }
-
-        private void GlobalizeApp()
-        {
-            SetCulture();
-            SetResource();
-            SetUIChanges();
-        }
-
-        private void SetCulture()
-        {
-            if (optset.Language != "")
-                strCulture = optset.Language;
-
-            CultureInfo objCI = new CultureInfo(strCulture);
-            Thread.CurrentThread.CurrentCulture = objCI;
-            Thread.CurrentThread.CurrentUICulture = objCI;
-
-        }
-        private void SetResource()
-        {
-            rm = ResourceManager.CreateFileBasedResourceManager
-                ("lang", strResourcesPath, null);
-        }
-
-        private void SetUIChanges()
+        private void UpdateTooltips()
         {
 
-            this.toolTip1.SetToolTip(this.btnConfig, frmMain.RM.GetString("0001"));
-            this.toolTip1.SetToolTip(this.btnHide, frmMain.RM.GetString("0002"));
-            this.toolTip1.SetToolTip(this.txtPhoneNumber, frmMain.RM.GetString("0003"));
-            this.toolTip1.SetToolTip(this.btnDial, frmMain.RM.GetString("0004"));
-            this.toolTip1.SetToolTip(this.cboOutboundContextes , frmMain.RM.GetString("0005"));
-            this.toolTip1.SetToolTip(this.btnQuit, frmMain.RM.GetString("0007"));
-            this.toolTip1.SetToolTip(this.btnStartStop, frmMain.RM.GetString("0010"));
+            this.toolTip1.SetToolTip(this.btnConfig, this.localizator["0001"]);
+            this.toolTip1.SetToolTip(this.btnHide, this.localizator["0002"]);
+            this.toolTip1.SetToolTip(this.txtPhoneNumber, this.localizator["0003"]);
+            this.toolTip1.SetToolTip(this.btnDial, this.localizator["0004"]);
+            this.toolTip1.SetToolTip(this.cboOutboundContextes , this.localizator["0005"]);
+            this.toolTip1.SetToolTip(this.btnQuit, this.localizator["0007"]);
+            this.toolTip1.SetToolTip(this.btnStartStop, this.localizator["0010"]);
 
-            this.lblLineState.Text = frmMain.RM.GetString("0100");
-            this.btnQuit.Text = frmMain.RM.GetString("0006");
-            this.btnStartStop.Text = frmMain.RM.GetString("0008");
-
-            this.lblUserName.Text = frmMain.RM.GetString("0011");
-            this.lblSecret.Text = frmMain.RM.GetString("0012");
-            this.mnuShowHide.Text  = frmMain.RM.GetString("0013");
-
+            this.mnuShowHide.Text = this.localizator["0013"];
         }
 
         #endregion
