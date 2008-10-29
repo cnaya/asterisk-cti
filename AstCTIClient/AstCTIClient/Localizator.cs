@@ -12,10 +12,18 @@ namespace AstCTIClient
 {
     class Localizator
     {
+        #region Private Vars
         private string strResourcesPath = Application.StartupPath + Path.DirectorySeparatorChar + "lang";
         private string strCulture = "en-US";
         private ResourceManager rm;
+        #endregion
 
+        #region Events
+        public delegate void OnLocalizationCompleted(Object obj);
+        public event OnLocalizationCompleted LocalizationCompleted;
+        #endregion
+
+        #region Constructors
         public Localizator()
             : this("")
         {
@@ -32,7 +40,9 @@ namespace AstCTIClient
                 ("lang", strResourcesPath, null);
             this.UpdateCulture();
         }
+        #endregion
 
+        #region Public Properties
         public string ResourcePath
         {
             get { return this.strResourcesPath; }
@@ -63,15 +73,9 @@ namespace AstCTIClient
                 return rm;
             }
         }
-
-        private void UpdateCulture()
-        {
-            CultureInfo objCI = new CultureInfo(strCulture);
-            Thread.CurrentThread.CurrentCulture = objCI;
-            Thread.CurrentThread.CurrentUICulture = objCI;
-
-        }
-
+        #endregion
+        
+        #region Form
         public void Localize(Form f)
         {
             this.Localize(f,"");
@@ -96,19 +100,59 @@ namespace AstCTIClient
 
             foreach (Control ctl in f.Controls)
             {
-                RecursiveLocalize(ctl);
+                String ctl_type = ctl.GetType().ToString();
+                if (ctl_type.Equals("System.Windows.Forms.ToolStrip"))
+                {
+                    LocalizeToolStrip((ToolStrip)ctl);
+                }
+                else
+                {
+                    RecursiveLocalize(ctl);
+                }
             }
-            
+            if (this.LocalizationCompleted != null) this.LocalizationCompleted(f);
         }
+        #endregion
 
+        #region Control
         public void Localize(Control ctl)
         {
             this.RecursiveLocalize(ctl);
-        }
+            if (this.LocalizationCompleted != null) this.LocalizationCompleted(ctl);
 
+        }
+        #endregion
+
+        #region Menu
         public void Localize(Menu m)
         {
             this.RecursiveLocalizeMenu(m);
+            if (this.LocalizationCompleted != null) this.LocalizationCompleted(m);
+        }
+        #endregion
+
+        #region Private Methods
+        private void UpdateCulture()
+        {
+            CultureInfo objCI = new CultureInfo(strCulture);
+            Thread.CurrentThread.CurrentCulture = objCI;
+            Thread.CurrentThread.CurrentUICulture = objCI;
+
+        }
+
+        private void LocalizeToolStrip(ToolStrip tsp)
+        {
+            foreach (ToolStripItem ti in tsp.Items)
+            {
+                if (ti.Tag != null)
+                {
+                    string code = (string)ti.Tag;
+                    if (code != "")
+                    {
+                        ti.Text = this[code];
+                    }
+                }
+            }
         }
 
         private void RecursiveLocalizeMenu(Menu m)
@@ -127,6 +171,9 @@ namespace AstCTIClient
 
         private void RecursiveLocalize(Control cctl)
         {
+            string ctl_type = cctl.GetType().ToString();
+            Console.WriteLine(ctl_type);
+
             if (cctl.ContextMenu != null)
             {
                 RecursiveLocalizeMenu((Menu)cctl.ContextMenu);
@@ -147,9 +194,9 @@ namespace AstCTIClient
                     RecursiveLocalize(scctl);
                 }
             }
-            
-        }
 
+        }
+        #endregion
     }
 
 

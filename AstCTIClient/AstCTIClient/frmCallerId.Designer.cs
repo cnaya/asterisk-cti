@@ -81,6 +81,7 @@ namespace AstCTIClient
             this.lblNewCallFrom.Name = "lblNewCallFrom";
             this.lblNewCallFrom.Size = new System.Drawing.Size(154, 24);
             this.lblNewCallFrom.TabIndex = 0;
+            this.lblNewCallFrom.Tag = "0200";
             this.lblNewCallFrom.Text = "New Call From:";
             // 
             // lblCallerId
@@ -117,6 +118,7 @@ namespace AstCTIClient
             this.lnkLabelClose.Size = new System.Drawing.Size(75, 13);
             this.lnkLabelClose.TabIndex = 5;
             this.lnkLabelClose.TabStop = true;
+            this.lnkLabelClose.Tag = "0201";
             this.lnkLabelClose.Text = "Click To Close";
             this.lnkLabelClose.VisitedLinkColor = System.Drawing.Color.MidnightBlue;
             this.lnkLabelClose.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkLabelClose_LinkClicked);

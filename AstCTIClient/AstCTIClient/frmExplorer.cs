@@ -56,10 +56,9 @@ namespace AstCTIClient
     public partial class frmExplorer : Form
     {
         private SHDocVw.WebBrowserClass ie_events;
-        private string strResourcesPath = Application.StartupPath + Path.DirectorySeparatorChar + "lang";
-        private string strCulture = "en-US";
-        private static ResourceManager rm;
+        
         private LocalAppSettings optset;
+        private Localizator localizator;
 
         public delegate void OnNewWindow(Form f);
         public event OnNewWindow NewWindow;
@@ -73,11 +72,13 @@ namespace AstCTIClient
             this.childs = new ArrayList();
             this.optset = (LocalAppSettings)appsettings;
             UpdateInterfaceFromConfg();
-            UpdateComboWidth();
-            BindExplorerEvents();
-            this.Load += new EventHandler(frmExplorer_Load);
             
+            BindExplorerEvents();
 
+            this.localizator = new Localizator();
+            this.localizator.Culture = this.optset.Language;
+            this.localizator.Localize(this);
+            this.UpdateComboWidth();
         }
 
         public frmExplorer(AppSettings appsettings, string url) : this(appsettings)
@@ -103,10 +104,7 @@ namespace AstCTIClient
         #endregion
 
         #region Window Events
-        void frmExplorer_Load(object sender, EventArgs e)
-        {
-            GlobalizeApp();
-        }
+        
         private void toolStrip1_SizeChanged(object sender, EventArgs e)
         {
             UpdateComboWidth();
@@ -124,8 +122,8 @@ namespace AstCTIClient
 
         private void UpdateComboWidth()
         {
-            int btnGoWidth = (this.btnGo.Visible) ? this.btnGo.Width : 0;
-            this.cboAddressList.Width = toolStrip1.ClientRectangle.Width - btnGoWidth - 50;
+            int btnGoWidth = (this.optset.ShowGoButton) ? this.btnGo.Width : 0;
+            this.cboAddressList.Width = toolStrip1.ClientRectangle.Width - btnGoWidth - 10;
         }
         #endregion
 
@@ -223,45 +221,6 @@ namespace AstCTIClient
         }
         #endregion
 
-        #region Localization Action
-        public static ResourceManager RM
-        {
-            get
-            {
-                return rm;
-            }
-        }
-
-        private void GlobalizeApp()
-        {
-            SetCulture();
-            SetResource();
-            SetUIChanges();
-        }
-
-        private void SetCulture()
-        {
-            if (optset.Language != "")
-                strCulture = optset.Language;
-
-            CultureInfo objCI = new CultureInfo(strCulture);
-            Thread.CurrentThread.CurrentCulture = objCI;
-            Thread.CurrentThread.CurrentUICulture = objCI;
-
-        }
-        private void SetResource()
-        {
-            rm = ResourceManager.CreateFileBasedResourceManager
-                ("lang", strResourcesPath, null);
-        }
-
-        private void SetUIChanges()
-        {
-            this.btnGo.Text = frmExplorer.RM.GetString("0300");
-            
-
-        }
-
-        #endregion
+        
     }
 }

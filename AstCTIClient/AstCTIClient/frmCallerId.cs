@@ -54,10 +54,9 @@ namespace AstCTIClient
     public partial class frmCallerId : FadingForm
     {
         private System.Windows.Forms.Timer myTimer;
-        private string strResourcesPath = Application.StartupPath + Path.DirectorySeparatorChar + "lang";
-        private string strCulture = "en-US";
-        private static ResourceManager rm;
+        
         private LocalAppSettings optset;
+        private Localizator localizator;
 
         public frmCallerId(AppSettings appsettings, string callerid)
         {
@@ -66,19 +65,18 @@ namespace AstCTIClient
             Stream s = this.GetType().Assembly.GetManifestResourceStream("AstCTIClient.callerid.gif");
             Bitmap bmp = new Bitmap(s);
             this.Region = BitmapToRegion.Convert(bmp, bmp.GetPixel(0, 0), TransparencyMode.ColorKeyTransparent);
-            this.Load += new EventHandler(frmCallerId_Load);
             this.Click += new EventHandler(frmCallerId_Click);
             this.lblCallerId.Text = callerid;
             this.lblCallerName.Text = "";
             this.Speed = 10;
             this.MouseEnter += new EventHandler(frmCallerId_MouseEnter);
             this.MouseLeave += new EventHandler(frmCallerId_MouseLeave);
+            this.localizator = new Localizator();
+            this.localizator.Culture = this.optset.Language;
+            this.localizator.Localize(this);
         }
 
-        void frmCallerId_Load(object sender, EventArgs e)
-        {
-            GlobalizeApp();
-        }
+        
 
         void frmCallerId_MouseLeave(object sender, EventArgs e)
         {
@@ -111,47 +109,6 @@ namespace AstCTIClient
             this.Dispose();
         }
 
-        #region Localization Action
-
-        public static ResourceManager RM
-        {
-            get
-            {
-                return rm;
-            }
-        }
-
-        private void GlobalizeApp()
-        {
-            SetCulture();
-            SetResource();
-            SetUIChanges();
-        }
-
-        private void SetCulture()
-        {
-            if (optset.Language != "")
-                strCulture = optset.Language;
-
-            CultureInfo objCI = new CultureInfo(strCulture);
-            Thread.CurrentThread.CurrentCulture = objCI;
-            Thread.CurrentThread.CurrentUICulture = objCI;
-
-        }
-        private void SetResource()
-        {
-            rm = ResourceManager.CreateFileBasedResourceManager
-                ("lang", strResourcesPath, null);
-        }
-
-        private void SetUIChanges()
-        {
-            this.lblNewCallFrom.Text = frmCallerId.RM.GetString("0200");
-            this.lnkLabelClose.Text = frmCallerId.RM.GetString("0201");
-
-        }
-
-        #endregion
         
     }
 }

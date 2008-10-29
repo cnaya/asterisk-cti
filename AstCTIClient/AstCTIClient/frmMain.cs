@@ -154,8 +154,7 @@ namespace AstCTIClient
             this.localizator.Culture = this.optset.Language;
             this.localizator.Localize(this);
             UpdateTooltips();
-
-            this.FormSetFont();
+            this.FormSetFont();           
             
         }
         void FormSetFont()

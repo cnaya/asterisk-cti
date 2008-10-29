@@ -81,6 +81,8 @@ namespace AstCTIClient
             // toolStrip1
             // 
             this.toolStrip1.CanOverflow = false;
+            this.toolStrip1.GripMargin = new System.Windows.Forms.Padding(0);
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cboAddressList,
             this.btnGo});
@@ -98,6 +100,7 @@ namespace AstCTIClient
             this.cboAddressList.AutoSize = false;
             this.cboAddressList.DropDownWidth = 400;
             this.cboAddressList.Name = "cboAddressList";
+            this.cboAddressList.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.cboAddressList.Size = new System.Drawing.Size(400, 23);
             this.cboAddressList.KeyUp += new System.Windows.Forms.KeyEventHandler(this.cboAddressList_KeyUp);
             // 
@@ -106,7 +109,9 @@ namespace AstCTIClient
             this.btnGo.Image = global::AstCTIClient.Properties.Resources.agt_action_success;
             this.btnGo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnGo.Name = "btnGo";
+            this.btnGo.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.btnGo.Size = new System.Drawing.Size(42, 22);
+            this.btnGo.Tag = "0300";
             this.btnGo.Text = "Go";
             this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
             // 
