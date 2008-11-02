@@ -57,6 +57,7 @@ namespace AstCTIClient
         private string application = "";
         private string parameters = "";
         private bool enabled = false;
+        private bool catch_all = false;
         private string displayname = "";
 
         public string Context
@@ -86,6 +87,13 @@ namespace AstCTIClient
             get { return this.use_internal_browser; }
             set { this.use_internal_browser = value; }
         }
+
+        public bool CatchAll
+        {
+            get { return this.catch_all; }
+            set { this.catch_all = value; }
+        }
+
 
         public bool Enabled
         {
@@ -118,7 +126,7 @@ namespace AstCTIClient
             newObject.Parameters= this.parameters;
             newObject.InternalBrowser = this.use_internal_browser;
             newObject.Enabled = this.enabled;
-            
+            newObject.CatchAll = this.catch_all;
             
             return newObject;
         }
@@ -129,7 +137,7 @@ namespace AstCTIClient
         #region collection impl
 
         /// <summary>
-        /// Adds an employee object to the collection
+        /// Adds an context object to the collection
         /// </summary>
         /// <param name="emp"></param>
         public void Add(CTIContext cti)
@@ -138,11 +146,13 @@ namespace AstCTIClient
             {
                 return;
             }
+            
             this.List.Add(cti);
-        }
+        }   
+
 
         /// <summary>
-        /// Removes an employee object from the collection
+        /// Removes an context object from the collection
         /// </summary>
         /// <param name="emp"></param>
         public void Remove(CTIContext cti)
@@ -151,7 +161,7 @@ namespace AstCTIClient
         }
 
         /// <summary>
-        /// Returns an employee object at index position.
+        /// Returns an context object at index position.
         /// </summary>
         public CTIContext this[int index]
         {
@@ -237,10 +247,10 @@ namespace AstCTIClient
             // Create a collection object to hold property descriptors
             PropertyDescriptorCollection pds = new PropertyDescriptorCollection(null);
 
-            // Iterate the list of employees
+            // Iterate the list of contexts
             for (int i = 0; i < this.List.Count; i++)
             {
-                // Create a property descriptor for the employee item and add to the property descriptor collection
+                // Create a property descriptor for the context item and add to the property descriptor collection
                 CTIContextCollectionPropertyDescriptor pd = new CTIContextCollectionPropertyDescriptor(this, i);
                 pds.Add(pd);
             }
@@ -349,7 +359,7 @@ namespace AstCTIClient
         {
             if (destType == typeof(string) && value is CTIContext)
             {
-                // Cast the value to an Employee type
+                // Cast the value to an context type
                 CTIContext cti = (CTIContext)value;
 
                 return cti.Context;

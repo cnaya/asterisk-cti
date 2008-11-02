@@ -163,6 +163,7 @@ namespace AstCTIServer
         void sock_SocketError(object sender, string data, int errorCode)
         {
             if (Server.debug) Console.WriteLine("Asterisk disconnected. Trying again in 10 seconds");
+            Server.logger.WriteLine(LogType.Debug, "Asterisk disconnected. Trying again in 10 seconds");
             this.loggedIn = false;
             Thread.Sleep(10 * 1000);
 
@@ -173,6 +174,7 @@ namespace AstCTIServer
         void sock_Disconnected(object sender)
         {
             if (Server.debug) Console.WriteLine("Asterisk disconnected. Trying again in 10 seconds");
+            Server.logger.WriteLine(LogType.Debug, "Asterisk disconnected. Trying again in 10 seconds");
             this.loggedIn = false;
             Thread.Sleep(10 * 1000);
 
@@ -461,7 +463,7 @@ namespace AstCTIServer
                         {
                             if (call.Context != null) call1.Context = call.Context;
                         }
-                        call1.CallerIDNum = callerid2;
+                        // call1.CallerIDNum = callerid2;
                     }
                     if ((call != null) & (call1 != null))
                     {

@@ -505,6 +505,19 @@ namespace AstCTIClient
                                     }
                                 }
                             }
+                            // Check for a CatchAll
+                            if (tostart == null)
+                            {
+                                foreach (CTIContext ctx in this.optset.CTIContextes)
+                                {
+                                    if ( (ctx.CatchAll) & (ctx.Enabled) )
+                                    {
+                                        tostart = ctx;
+                                        break;                                      
+                                    }
+                                }
+                            }
+
                             state = this.localizator["0104"]; // "Connected"
                             Invoke(new SetPropertyDelegate(SetProperty), new object[] { (object)lblLineState, "Text", state });
                             if (tostart != null) ExecCTIApplication(tostart,call);
@@ -687,6 +700,7 @@ namespace AstCTIClient
                 frmExp = new frmExplorer(this.optset);
             }
             frmExp.ShowDialog();
+            
         }
 
         void OpenCallerIdForm(string calleridnum)

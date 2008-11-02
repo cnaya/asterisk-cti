@@ -62,7 +62,17 @@ namespace AstCTIClient
         {
             get
             {
-                return this.rm.GetString(code);
+                string res = "";
+                try
+                {
+                    res = this.rm.GetString(code);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Missing string for code: " + code + " in locale: " + this.strCulture);
+                    return "";
+                }
+                return res;
             }
         }
 

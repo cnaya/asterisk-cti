@@ -111,7 +111,7 @@ namespace AstCTIClient
         #region collection impl
 
         /// <summary>
-        /// Adds an employee object to the collection
+        /// Adds an context object to the collection
         /// </summary>
         /// <param name="emp"></param>
         public void Add(CTIOutboundContext cti)
@@ -124,7 +124,7 @@ namespace AstCTIClient
         }
 
         /// <summary>
-        /// Removes an employee object from the collection
+        /// Removes an context object from the collection
         /// </summary>
         /// <param name="emp"></param>
         public void Remove(CTIOutboundContext cti)
@@ -133,7 +133,7 @@ namespace AstCTIClient
         }
 
         /// <summary>
-        /// Returns an employee object at index position.
+        /// Returns an context object at index position.
         /// </summary>
         public CTIOutboundContext this[int index]
         {
@@ -219,10 +219,10 @@ namespace AstCTIClient
             // Create a collection object to hold property descriptors
             PropertyDescriptorCollection pds = new PropertyDescriptorCollection(null);
 
-            // Iterate the list of employees
+            // Iterate the list of contexts
             for (int i = 0; i < this.List.Count; i++)
             {
-                // Create a property descriptor for the employee item and add to the property descriptor collection
+                // Create a property descriptor for the context item and add to the property descriptor collection
                 CTIOutboundContextCollectionPropertyDescriptor pd = new CTIOutboundContextCollectionPropertyDescriptor(this, i);
                 pds.Add(pd);
             }
@@ -331,7 +331,7 @@ namespace AstCTIClient
         {
             if (destType == typeof(string) && value is CTIOutboundContext)
             {
-                // Cast the value to an Employee type
+                // Cast the value to an context type
                 CTIOutboundContext cti = (CTIOutboundContext)value;
 
                 return cti.Context;

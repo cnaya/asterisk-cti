@@ -79,11 +79,13 @@ namespace AstCTIClient
             this.localizator.Culture = this.optset.Language;
             this.localizator.Localize(this);
             this.UpdateComboWidth();
+            this.BringToFront();
         }
 
         public frmExplorer(AppSettings appsettings, string url) : this(appsettings)
         {
             this.BeginNavigate(url);
+            
         }
 
         protected override void OnClosed(EventArgs e)
