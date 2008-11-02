@@ -52,6 +52,16 @@ using System.IO;
 
 namespace AstCTIServer
 {
+    enum ServerStatus
+    {
+        STATUS_UNDEFINED = 0,
+        STATUS_LOGGING_IN = 1,
+        STATUS_LOGGEDIN = 2,
+        STATUS_REQUESTING_EXTENSIONS = 3,
+        STATUS_REQUESTING_SIP = 4,
+        STATUS_REQUESTING_QUEUES = 5
+    }
+
     class Server
     {
         public static FileLogger logger;
@@ -59,7 +69,10 @@ namespace AstCTIServer
         public static SharedState shared;
         public static MySqlConnection cn;
         public static bool debug = false;
+        public static bool dumpconf = false;
         public static MainServer AstCTI;
+    
+        
 
         public static bool IsMono()
         {
@@ -90,10 +103,29 @@ namespace AstCTIServer
 
             foreach (string arg in args)
             {
+                if (arg.ToLower().Equals("--help"))
+                {
+                    string usage = "\n";
+                    usage       += "Usage:\n";
+                    usage       += "-----------------------------------------------------------------\n";
+                    usage       += "AstCtiServer.exe [--debug] [--dumpconfig]\n";
+                    usage       += "-----------------------------------------------------------------\n";
+                    usage       += "--debug      : enables extensive debug on console                \n";
+                    usage       += "--dumpconfig : enables dump of main asterisk configuration       \n";
+                    usage       += "               (extensions.conf, sip.conf and queues.conf) files \n";
+                    Console.WriteLine(usage);
+                    return;
+                }
                 if (arg.ToLower().Equals("--debug"))
                 {
                     Server.debug = true;
                 }
+
+                if (arg.ToLower().Equals("--dumpconfig"))
+                {
+                    Server.dumpconf = true;
+                }
+
             }
 
             Server.logger.WriteLine(LogType.Info, "Testing database connection");
@@ -127,18 +159,20 @@ namespace AstCTIServer
     class MainServer
     {
         private SocketManager sock = null;
-        private bool loggedIn = false;
+        
         private string dataBuffer = "";
         private CTIServer ctiserver = null;
         private Hashtable activeCalls = null;
+        public ServerStatus status;
 
         public MainServer()
         {
+            this.status = ServerStatus.STATUS_UNDEFINED;
 
             this.activeCalls = new Hashtable();
             this.ctiserver = new CTIServer();
             // ctiserver.StartListening();
-
+        
             sock = new SocketManager(Server.cfg.MANAGER_HOST, Server.cfg.MANAGER_PORT);
             sock.Connected += new SocketManager.OnConnected(sock_Connected);
             sock.DataArrival += new SocketManager.OnDataArrival(sock_DataArrival);
@@ -164,7 +198,7 @@ namespace AstCTIServer
         {
             if (Server.debug) Console.WriteLine("Asterisk disconnected. Trying again in 10 seconds");
             Server.logger.WriteLine(LogType.Debug, "Asterisk disconnected. Trying again in 10 seconds");
-            this.loggedIn = false;
+            this.status = ServerStatus.STATUS_UNDEFINED;
             Thread.Sleep(10 * 1000);
 
 
@@ -175,7 +209,7 @@ namespace AstCTIServer
         {
             if (Server.debug) Console.WriteLine("Asterisk disconnected. Trying again in 10 seconds");
             Server.logger.WriteLine(LogType.Debug, "Asterisk disconnected. Trying again in 10 seconds");
-            this.loggedIn = false;
+            this.status = ServerStatus.STATUS_UNDEFINED;
             Thread.Sleep(10 * 1000);
 
 
@@ -202,30 +236,71 @@ namespace AstCTIServer
             string login = "Action: Login\r\n" +
                                      "Username: " + Server.cfg.MANAGER_USER + "\r\n" +
                                      "Secret: " + Server.cfg.MANAGER_PASS + "\r\n\r\n";
+            this.status = ServerStatus.STATUS_LOGGING_IN;
             this.sock.SendData(login);
         }
 
 
         void ParseData(string data)
         {
-            if (!this.loggedIn)
+            switch(this.status)
             {
-                if (data.Contains("Authentication accepted"))
-                {
-                    if (Server.debug) Console.WriteLine("Authentication successful");
-                    this.loggedIn = true;
-                    return;
-                }
-                else
-                {
-                    if (Server.debug) Console.WriteLine("Authentication failure");
-                }
+                case ServerStatus.STATUS_LOGGING_IN:            
+                    if (data.Contains("Authentication accepted"))
+                    {
+                        if (Server.debug) Console.WriteLine("Authentication successful");
+                        // It was asked to dump asterisk configurations
+                        if (Server.dumpconf)
+                        {
+                            this.status = ServerStatus.STATUS_REQUESTING_EXTENSIONS;
+                            RequestConfigFile("extensions.conf");
+                        }
+                        else
+                        {
+                            this.status = ServerStatus.STATUS_LOGGEDIN;
+                        }
+                        return;
+                    }
+                    else
+                    {
+                        this.status = ServerStatus.STATUS_UNDEFINED;
+                        if (Server.debug) Console.WriteLine("Authentication failure");
+                    }
+                    break;
+                case ServerStatus.STATUS_REQUESTING_EXTENSIONS:
+                    Server.logger.WriteLine(data);
+                    this.status = ServerStatus.STATUS_REQUESTING_SIP;
+                    RequestConfigFile("sip.conf");
+                    break;
+                case ServerStatus.STATUS_REQUESTING_SIP:
+                    Server.logger.WriteLine(data);
+                    this.status = ServerStatus.STATUS_REQUESTING_QUEUES;
+                    RequestConfigFile("queues.conf");
+                    break;
+                case ServerStatus.STATUS_REQUESTING_QUEUES:
+                    Server.logger.WriteLine(data);
+                    this.status = ServerStatus.STATUS_LOGGEDIN;
+                    break;
+                case ServerStatus.STATUS_LOGGEDIN:
+                    Hashtable evt = HashFromMessage(data);
+                    this.EvaluateEvent(evt);
+                    break;
             }
-            else
-            {
-                Hashtable evt = HashFromMessage(data);
-                this.EvaluateEvent(evt);
-            }
+        }
+
+        private void CheckConfigurationFiles()
+        {
+
+            
+            this.status = ServerStatus.STATUS_LOGGEDIN;
+        }
+
+        private void RequestConfigFile(string confFile)
+        {
+            if (Server.debug) Console.WriteLine("Requesting file " + confFile);
+            string request = "Action: GetConfig\r\n" +
+                                     "Filename: " + confFile + "\r\n\r\n";
+            this.sock.SendData(request);
         }
 
         private void EvaluateEvent(Hashtable evt)
