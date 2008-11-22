@@ -68,6 +68,18 @@ namespace AstCTIServer
 
         #region Server Socket Management
 
+        public void StopListening()
+        {
+            try
+            {
+                this.listener.Stop();
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
         /// <summary>
         /// Start the Server Listening Loop Thread
         /// </summary>

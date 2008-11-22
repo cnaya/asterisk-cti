@@ -71,7 +71,8 @@ namespace AstCTIServer
         public static bool debug = false;
         public static bool dumpconf = false;
         public static MainServer AstCTI;
-    
+        public static int MySqlWaitTime = 0;
+        public static string MySqlVersion = "";
         
 
         public static bool IsMono()
@@ -134,10 +135,21 @@ namespace AstCTIServer
                 Server.logger.WriteLine(LogType.Debug, "Connecting to database on: " + cfg.MYSQL_HOST);
                 Server.cn = new MySqlConnection(cfg.MYSQL_CONNSTR);
                 Server.cn.Open();
+               
+
+                Server.MySqlVersion = (string)MySqlHelper.ExecuteScalar(Server.cn, "SELECT VERSION()");
+                Server.MySqlWaitTime= GetWaitTimeout();
 
                 // La connessione al database è ok
                 Server.logger.WriteLine(LogType.Debug, "Database connection successful");
                 if (Server.debug) Console.WriteLine("Database connection successful");
+
+                Server.logger.WriteLine(LogType.Debug, "Database version: " + Server.MySqlVersion);
+                if (Server.debug) Console.WriteLine("Database version: " + Server.MySqlVersion);
+
+                Server.logger.WriteLine(LogType.Debug, "Wait timeout is: " + Server.MySqlWaitTime.ToString());
+                if (Server.debug) Console.WriteLine("Wait timeout is: " + Server.MySqlWaitTime.ToString());
+
                 Server.logger.WriteLine(LogType.Debug, "Server can start");
 
 
@@ -154,6 +166,55 @@ namespace AstCTIServer
             AstCTI = new MainServer();
 
         }
+
+        static int GetWaitTimeout()
+        {
+            MySqlCommand cmd = null;
+            MySqlDataAdapter da = null;
+            DataSet ds = null;
+            DataTable dt = null;
+            try
+            {
+                string sql = "SHOW VARIABLES LIKE 'wait_timeout'";
+                cmd = new MySqlCommand(sql, Server.cn);
+
+                cmd.Prepare();
+
+                da = new MySqlDataAdapter(cmd);
+                ds = new DataSet();
+                da.Fill(ds);
+                dt = ds.Tables[0];
+                if (dt.Rows.Count < 1)
+                {
+                    if (dt != null) dt.Dispose();
+                    if (da != null) da.Dispose();
+                    if (ds != null) ds.Dispose();
+                    if (cmd != null) cmd.Dispose();
+                    return 0;
+                }
+                else
+                {
+                    string val = "";
+                    int retval = 0;
+                    if (dt.Rows[0][1] != null) val =(string)dt.Rows[0][1];
+
+                    if (int.TryParse(val, out retval)) return retval;
+
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Server.logger.WriteLine(LogType.Error, string.Format("Exception in GetWaitTimeout: {0}", ex.Message));
+                if (dt != null) dt.Dispose();
+                if (dt != null) da.Dispose();
+                if (dt != null) ds.Dispose();
+                if (dt != null) cmd.Dispose();
+                return 0;
+            }
+        }
+
+        
     }
 
     class MainServer
@@ -164,34 +225,121 @@ namespace AstCTIServer
         private CTIServer ctiserver = null;
         private Hashtable activeCalls = null;
         public ServerStatus status;
+        private bool canPing = true;
+        private Thread t;
+        private Thread t1;
 
         public MainServer()
         {
+            Server.cn.StateChange += new StateChangeEventHandler(cn_StateChange);
             this.status = ServerStatus.STATUS_UNDEFINED;
 
             this.activeCalls = new Hashtable();
             this.ctiserver = new CTIServer();
-            // ctiserver.StartListening();
-        
             sock = new SocketManager(Server.cfg.MANAGER_HOST, Server.cfg.MANAGER_PORT);
             sock.Connected += new SocketManager.OnConnected(sock_Connected);
             sock.DataArrival += new SocketManager.OnDataArrival(sock_DataArrival);
             sock.Disconnected += new SocketManager.OnDisconnected(sock_Disconnected);
             sock.SocketError += new SocketManager.OnSocketError(sock_SocketError);
-            Thread t = new Thread(new ThreadStart(this.StartServer));
+            t = new Thread(new ThreadStart(this.StartServer));
             t.Start();
+            t1 = new Thread(new ThreadStart(this.MySQLKeepAlive));
+            t1.Start();
             sock.Connect();
 
 
         }
 
+        void cn_StateChange(object sender, StateChangeEventArgs e)
+        {
+            if ((Server.cn.State == ConnectionState.Broken) | (Server.cn.State == ConnectionState.Closed))
+            {
+                Server.cn.StateChange -= new StateChangeEventHandler(cn_StateChange);
+                canPing = false;
+                t1 = null;
+
+                Server.logger.WriteLine(LogType.Error, "MySQL Connection changed status to Closed");
+                if (Server.debug) Console.WriteLine("MySQL Connection changed status to Closed");
+
+                int retries = 0;
+
+                while (((Server.cfg.MYSQL_RETRY_TIMES > 0) ? Server.cfg.MYSQL_RETRY_TIMES > retries : true))
+                {
+                    Server.logger.WriteLine(LogType.Error, "MySQL reconnect - Try n. " + retries.ToString() +" to reopen MySQL");
+                    if (Server.debug) Console.WriteLine("MySQL reconnect - Try n. " + retries.ToString() + " to reopen MySQL");
+                    try
+                    {
+                        Server.cn.Dispose();
+                        Server.cn = new MySqlConnection(Server.cfg.MYSQL_CONNSTR);
+                        Server.cn.Open();
+                        if (Server.cn.State == ConnectionState.Open)
+                        {
+                            Server.cn.StateChange += new StateChangeEventHandler(cn_StateChange);
+
+                            canPing = true;
+                            t1 = new Thread(new ThreadStart(this.MySQLKeepAlive));
+                            t1.Start();
+                            Server.logger.WriteLine(LogType.Error, "MySQL Connection re-opened.");
+                            if (Server.debug) Console.WriteLine("MySQL Connection re-opened.");
+                            return;
+                        }
+                    }
+                    catch (MySqlException)
+                    {
+                        int sleep_time = Server.cfg.MYSQL_RETRY_WAIT;
+                        Server.logger.WriteLine(LogType.Error, "Connection not opened. Try again in " + sleep_time.ToString() + " seconds");
+                        if (Server.debug) Console.WriteLine("Connection not opened. Try again in " + sleep_time.ToString() + " seconds");
+                        Thread.Sleep(Server.cfg.MYSQL_RETRY_WAIT*1000);
+                    }
+                    retries++;
+                }
+                Server.logger.WriteLine(LogType.Fatal, "MySQL Database Server not responding. Abort!");
+                if (Server.debug) Console.WriteLine("MySQL Database Server not responding. Abort!");
+                Server.shared.ContinueProcess = false;
+                try
+                {
+                    ctiserver.StopListening();
+                    if (t1 != null) t1.Abort();
+                    if (t!=null) t.Abort();
+                }
+                catch(Exception)
+                {
+                }
+            }
+
+        }
+
+        void MySQLKeepAlive()
+        {
+            
+            while (canPing)
+            {
+                try
+                {
+                    Thread.Sleep(500);
+                    if (canPing) Server.cn.Ping();
+                }
+                catch (ThreadInterruptedException) { }
+                catch (ThreadAbortException) { }
+                
+            }
+            
+        }
+
         void StartServer()
         {
 
-            while (true)
+            while (Server.shared.ContinueProcess)
             {
-                Thread.Sleep(500);
+                try
+                {
+                    Thread.Sleep(500);
+                }
+                catch (ThreadInterruptedException) { }             
+                        
             }
+            Server.logger.WriteLine(LogType.Debug, "Ending server: database gone away!");
+            if (Server.debug) Console.WriteLine("Ending server: database gone away");
         }
 
         void sock_SocketError(object sender, string data, int errorCode)
@@ -290,8 +438,6 @@ namespace AstCTIServer
 
         private void CheckConfigurationFiles()
         {
-
-            
             this.status = ServerStatus.STATUS_LOGGEDIN;
         }
 
@@ -690,8 +836,6 @@ namespace AstCTIServer
                 Console.WriteLine(ex.ToString());
             }
         }
-
-
 
         private Hashtable HashFromMessage(string data)
         {

@@ -61,6 +61,8 @@ namespace AstCTIServer
 		public string	MYSQL_PASS		= "";
 		public string	MYSQL_DBMS		= "";
         public string   MYSQL_TIMEOUT   = "30";
+        public int MYSQL_RETRY_TIMES = 3;
+        public int MYSQL_RETRY_WAIT = 5;
 		public bool		LOG_ACTIVE		= false;
 		public string	LOG_DIRECTORY	= "";
 		public int		SOCKET_TIMEOUT	= 10;
@@ -102,7 +104,8 @@ namespace AstCTIServer
                 MYSQL_PASS = database["MYSQL_PASS"];
                 MYSQL_TIMEOUT = database["MYSQL_TIMEOUT"];
                 MYSQL_CONNSTR = getConnectionString(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DBMS, MYSQL_TIMEOUT);
-
+                MYSQL_RETRY_TIMES = ParseInteger(database["MYSQL_RETRY_TIMES"]);
+                MYSQL_RETRY_WAIT = ParseInteger(database["MYSQL_RETRY_WAIT"]);
                 System.Collections.Specialized.NameValueCollection logging = (System.Collections.Specialized.NameValueCollection)System.Configuration.ConfigurationManager.GetSection("globalsettings/logging");
                 this.LOG_DIRECTORY = ParsePath(logging["DIRECTORY"]);
                 this.LOG_ACTIVE = ParseBoolean(logging["ACTIVE"]);
