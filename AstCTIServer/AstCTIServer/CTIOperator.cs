@@ -93,6 +93,11 @@ namespace AstCTIServer
             DataTable dt = null;
             try
             {
+                if (Server.cn.State != ConnectionState.Open)
+                {
+                    return false;
+                }
+
                 string sql = "SELECT * FROM cti WHERE USERNAME=?user AND SECRET=?secret";
                 cmd = new MySqlCommand(sql, Server.cn);
                 cmd.Parameters.Add(new MySqlParameter("?user", username));
